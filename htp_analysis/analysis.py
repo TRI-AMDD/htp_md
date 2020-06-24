@@ -1,7 +1,7 @@
 import json
 import os
 import numpy as np
-from utils import load_lammps, _ATOM_MASSES
+from .utils import load_lammps, _ATOM_MASSES
 
 
 def get_diffusivity(dir_name, target_type=90):
