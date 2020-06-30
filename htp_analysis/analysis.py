@@ -71,6 +71,30 @@ def get_conductivity(dir_name):
     return cond  # S/cm
 
 
+def lammpstraj2npz(dir_name, out_dir, target_atom_num):
+    """Converts a lammpstraj file to a npz file."""
+    lammps_file = os.path.join(dir_name, 'traj.lammpstrj')
+    output_file = os.path.join(out_dir, dir_name.split('/')[-1])
+
+    print('Loading lammps file.')
+    print('-' * 80)
+    traj_coords, lattices, atom_types, unwrapped_coords = load_lammps(
+        lammps_file, use_mass=True, tol=0.01)
+    target_index = np.nonzero(atom_types == target_atom_num)
+
+    data_dict = {
+        'traj_coords': traj_coords,
+        'lattices': lattices,
+        'atom_types': atom_types,
+        'target_index': target_index,
+        'unwrapped_coords': unwrapped_coords,
+    }
+    print('Saving data.')
+    print('-' * 80)
+    np.savez_compressed(output_file, **data_dict)
+
+
+
 def analyze_all(root_dir, analyze_fn, num_workers=None):
     """Function to analyze all directories in"""
     dir_names = [fn for fn in os.listdir(root_dir)
