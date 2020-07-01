@@ -80,7 +80,7 @@ def lammpstraj2npz(dir_name, out_dir, target_atom_num):
     print('-' * 80)
     traj_coords, lattices, atom_types, unwrapped_coords = load_lammps(
         lammps_file, use_mass=True, tol=0.01)
-    target_index = np.nonzero(atom_types == target_atom_num)
+    target_index = np.nonzero(atom_types == target_atom_num)[0]
 
     data_dict = {
         'traj_coords': traj_coords,
