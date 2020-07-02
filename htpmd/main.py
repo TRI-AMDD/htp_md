@@ -10,7 +10,7 @@ Options:
 """
 
 from docopt import docopt
-from htp_md.analysis import get_diffusivity, get_conductivity, get_molarity
+from htpmd.analysis import get_diffusivity, get_conductivity, get_molarity
 import pkg_resources
 
 
@@ -37,10 +37,10 @@ def analyze(dir_path):
 
 def get_version():
     """
-    Returns the current htp_md module version.
+    Returns the current htpmd module version.
 
     Returns:
-        str:                htp_md version
+        str:                htpmd version
     """
 
     version = pkg_resources.require("htp-md")[0].version
