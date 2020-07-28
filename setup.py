@@ -12,7 +12,7 @@ with open(path.join(here, 'requirements.txt')) as f:
 
 setup(
     name='htpmd',
-    version='0.0.2',
+    version='0.0.4',
     description='A library to analyze trajectory data from Molecular Dynamics Simulations',
     long_description=long_description,
     long_description_content_type='text/markdown',
