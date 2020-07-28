@@ -43,7 +43,7 @@ def get_version():
         str:                htpmd version
     """
 
-    version = pkg_resources.require("htp-md")[0].version
+    version = pkg_resources.require("htpmd")[0].version
     return version
 
 
