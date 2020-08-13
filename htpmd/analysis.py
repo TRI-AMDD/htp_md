@@ -5,12 +5,12 @@ from .utils import load_lammps, _ATOM_MASSES
 
 
 REQUIRED_METADATA = {
-    'mol_smiles',
-    'poly_smiles',
-    'force_field',
-    'material_group',
-    'temperature',
-    'timestep',
+    'mol_smiles',  # Smiles for molecule. E.g. '[Cu]CCO[Au]' for PEO
+    'poly_smiles',  # Smiles for polymer.  E.g. 'CCOCCOCCOCCOCCOCCO' for PEO
+    'force_field',  # Force field. E.g. 'PCFF+'
+    'material_group',  # Type of materials. E.g. polymer
+    'temperature',  # Temperature in K. E.g. 353
+    'timestep',  # timestep in fs. E.g. 2.
 }
 
 
