@@ -4,6 +4,23 @@ import numpy as np
 from .utils import load_lammps, _ATOM_MASSES
 
 
+REQUIRED_METADATA = {
+    'mol_smiles',  # Smiles for molecule. E.g. '[Cu]CCO[Au]' for PEO
+    'poly_smiles',  # Smiles for polymer.  E.g. 'CCOCCOCCOCCOCCOCCO' for PEO
+    'force_field',  # Force field. E.g. 'PCFF+'
+    'material_group',  # Type of materials. E.g. polymer
+    'temperature',  # Temperature in K. E.g. 353
+    'timestep',  # timestep in fs. E.g. 2.
+}
+
+
+def get_metadata(dir_name):
+    with open(os.path.join(dir_name, 'meta.json')) as f:
+        metadata = json.load(f)
+    assert set(metadata.keys()).issuperset(REQUIRED_METADATA)
+    return metadata
+
+
 def get_diffusivity(dir_name, target_type=90):
     """Diffusivity of a specified atom type (unit: cm^2/s)."""
     _, _, types, unwrapped_coords = load_lammps(

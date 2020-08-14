@@ -10,7 +10,7 @@ Options:
 """
 
 from docopt import docopt
-from htpmd.analysis import get_diffusivity, get_conductivity, get_molarity
+from htpmd import analysis
 import pkg_resources
 
 
@@ -26,12 +26,14 @@ def analyze(dir_path):
 
     """
     results = dict()
-    diffusivity = get_diffusivity(dir_path)
+    diffusivity = analysis.get_diffusivity(dir_path)
     results['diffusivity'] = diffusivity
-    conductivity = get_conductivity(dir_path)
+    conductivity = analysis.get_conductivity(dir_path)
     results['conductivity'] = conductivity
-    molarity = get_molarity(dir_path)
+    molarity = analysis.get_molarity(dir_path)
     results['molarity'] = molarity
+    metadata = analysis.get_metadata(dir_path)
+    results.update(metadata)
     return results
 
 
