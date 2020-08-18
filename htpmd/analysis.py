@@ -10,7 +10,7 @@ REQUIRED_METADATA = {
     'force_field',  # Force field. E.g. 'PCFF+'
     'material_group',  # Type of materials. E.g. polymer
     'temperature',  # Temperature in K. E.g. 353
-    'timestep',  # timestep in fs. E.g. 2.
+    'time_step',  # timestep in fs. E.g. 2.
 }
 
 
