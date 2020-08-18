@@ -14,6 +14,26 @@ REQUIRED_METADATA = {
 }
 
 
+def get_all_properties(dir_name):
+    # Load trajectories and pre-computed properties
+    wrapped_coords, lattices, raw_types, atom_types, unwrapped_coords = (
+        get_raw_traj(dir_path))
+    pop_mat = get_population_matrix(dir_path)
+    metadata = get_metadata(dir_path)
+
+    # Compute properties
+    results = dict()
+    results.update(metadata)
+    results['li_diffusivity'] = get_diffusivity(
+        raw_types, unwrapped_coords, target_type=90)
+    results['tfsi_diffusivity'] = get_diffusivity(
+        raw_types, unwrapped_coords, target_type=93))
+    results['conductivity'] = get_conductivity(
+        lattices, raw_types, unwrapped_coords, pop_mat)
+    results['molarity'] = get_molarity(raw_types, atom_types)
+    return results
+
+
 def get_metadata(dir_name):
     with open(os.path.join(dir_name, 'meta.json')) as f:
         metadata = json.load(f)

@@ -25,23 +25,7 @@ def analyze(dir_path):
         dict:                               analysis results
 
     """
-    results = dict()
-    # Load trajectories and pre-computed properties
-    wrapped_coords, lattices, raw_types, atom_types, unwrapped_coords = (
-        analysis.get_raw_traj(dir_path))
-    pop_mat = analysis.get_population_matrix(dir_path)
-    metadata = analysis.get_metadata(dir_path)
-
-    # Compute properties
-    results.update(metadata)
-    results['li_diffusivity'] = analysis.get_diffusivity(
-        raw_types, unwrapped_coords, target_type=90)
-    results['tfsi_diffusivity'] = analysis.get_diffusivity(
-        raw_types, unwrapped_coords, target_type=93))
-    results['conductivity'] = analysis.get_conductivity(
-        lattices, raw_types, unwrapped_coords, pop_mat)
-    results['molarity'] =  analysis.get_molarity(raw_types, atom_types)
-    return results
+    return analysis.get_all_properties(dir_path)
 
 
 def get_version():
