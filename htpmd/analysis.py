@@ -32,7 +32,7 @@ def get_molarity(dir_name):
     """Molarity of the polymer/salt mixture (unit: mol Li / kg polymer)."""
     lammps_file = os.path.join(dir_name, 'traj.lammpstrj')
     _, _, raw_types, _ = load_lammps(lammps_file, use_mass=False)
-    _, _, real_types, _ = load_lammps(lammps_file, use_mass=True, tol=0.01)
+    _, _, real_types, _ = load_lammps(lammps_file, use_mass=True)
 
     poly_idx = np.nonzero(raw_types < 89)[0]
     li_idx = np.nonzero(real_types == 3)[0]
