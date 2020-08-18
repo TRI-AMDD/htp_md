@@ -25,16 +25,7 @@ def analyze(dir_path):
         dict:                               analysis results
 
     """
-    results = dict()
-    diffusivity = analysis.get_diffusivity(dir_path)
-    results['diffusivity'] = diffusivity
-    conductivity = analysis.get_conductivity(dir_path)
-    results['conductivity'] = conductivity
-    molarity = analysis.get_molarity(dir_path)
-    results['molarity'] = molarity
-    metadata = analysis.get_metadata(dir_path)
-    results.update(metadata)
-    return results
+    return analysis.get_all_properties(dir_path)
 
 
 def get_version():

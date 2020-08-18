@@ -10,8 +10,32 @@ REQUIRED_METADATA = {
     'force_field',  # Force field. E.g. 'PCFF+'
     'material_group',  # Type of materials. E.g. polymer
     'temperature',  # Temperature in K. E.g. 353
-    'timestep',  # timestep in fs. E.g. 2.
+    'time_step',  # timestep in fs. E.g. 2.
 }
+
+
+def get_all_properties(dir_name):
+    # Load trajectories and pre-computed properties
+    wrapped_coords, lattices, raw_types, atom_types, unwrapped_coords = (
+        get_raw_traj(dir_name))
+    pop_mat = get_population_matrix(dir_name)
+    metadata = get_metadata(dir_name)
+
+    # Compute properties
+    results = dict()
+    results.update(metadata)
+    # Remove COS drift
+    unwrapped_coords = get_coords_without_drift(unwrapped_coords, atom_types)
+    results['li_diffusivity'] = get_diffusivity(
+        raw_types, unwrapped_coords, target_type=90)
+    results['tfsi_diffusivity'] = get_diffusivity(
+        raw_types, unwrapped_coords, target_type=93)
+    results['poly_diffusivity'] = get_polymer_diffusivity(
+        raw_types, atom_types, unwrapped_coords)
+    results['conductivity'] = get_conductivity(
+        lattices, raw_types, unwrapped_coords, pop_mat)
+    results['molarity'] = get_molarity(raw_types, atom_types)
+    return results
 
 
 def get_metadata(dir_name):
@@ -21,18 +45,21 @@ def get_metadata(dir_name):
     return metadata
 
 
-def get_diffusivity(dir_name, target_type=90):
-    """Diffusivity of a specified atom type (unit: cm^2/s)."""
-    _, _, types, unwrapped_coords = load_lammps(
+def get_raw_traj(dir_name):
+    """Load the entire trajectory into memory."""
+    wrapped_coords, lattices, types, atom_types, unwrapped_coords = load_lammps(
         os.path.join(dir_name, 'traj.lammpstrj'))
-    return compute_diff(types, unwrapped_coords, target_type)
+    return wrapped_coords, lattices, types, atom_types, unwrapped_coords
 
 
-def get_molarity(dir_name):
+def get_population_matrix(dir_name):
+    """Load the population matrix computed by lammps."""
+    pop_mat = np.loadtxt(os.path.join(dir_name, 'population.txt'))
+    return pop_mat
+
+
+def get_molarity(raw_types, real_types):
     """Molarity of the polymer/salt mixture (unit: mol Li / kg polymer)."""
-    lammps_file = os.path.join(dir_name, 'traj.lammpstrj')
-    _, _, raw_types, _ = load_lammps(lammps_file, use_mass=False)
-    _, _, real_types, _ = load_lammps(lammps_file, use_mass=True, tol=0.01)
 
     poly_idx = np.nonzero(raw_types < 89)[0]
     li_idx = np.nonzero(real_types == 3)[0]
@@ -44,27 +71,47 @@ def get_molarity(dir_name):
     return float(len(li_idx)) / poly_mass * 1e3
 
 
-def compute_diff(types, unwrapped_coords, target_type):
-    target_idx = np.nonzero(types == target_type)[0]
+def compute_center_of_mass(coords, atom_types):
+    element_masses = np.array(_ATOM_MASSES)
+    atom_masses = element_masses[atom_types]
+    return (np.sum(coords * atom_masses[np.newaxis, :, np.newaxis], axis=1) /
+            np.sum(atom_masses))
+
+
+def get_coords_without_drift(coords, atom_types):
+    cos_coord = compute_center_of_mass(coords, atom_types)
+    return coords - cos_coord[:, np.newaxis]
+
+
+def get_diffusivity(raw_types, unwrapped_coords, target_type):
+    """Diffusivity of a specified atom type (unit: cm^2/s)."""
+    target_idx = np.nonzero(raw_types == target_type)[0]
     target_coords = unwrapped_coords[:, target_idx]
     msd = np.mean(np.sum((target_coords[-1] - target_coords[0])**2, axis=-1))
-    return msd / (len(target_coords) - 1) / 6 * 5e-5 # cm^2/s
+    return msd / (len(target_coords) - 1) / 6 * 5e-5  # cm^2/s
 
 
-def get_conductivity(dir_name):
+def get_polymer_diffusivity(raw_types, atom_types, unwrapped_coords):
+    # TODO: should F be included?
+    solvate_types = (atom_types == 7) | (atom_types == 8) | (atom_types == 16)
+    poly_solvate_types = (raw_types < 90) & solvate_types
+    poly_solvate_idx = np.nonzero(poly_solvate_types)[0]
+    target_coords = unwrapped_coords[:, poly_solvate_idx]
+    msd = np.mean(np.sum((target_coords[-1] - target_coords[0])**2, axis=-1))
+    return msd / (len(target_coords) - 1) / 6 * 5e-5  # cm^2/s
+
+
+def get_conductivity(lattices, raw_types, unwrapped_coords, pop_mat):
     """Total conducitivty of the system (unit: S/cm)."""
     max_cluster = 10
     e_const = 1.6021766209e-19
     kb_const = 1.38064852e-23
     T = 353.0
 
-    pop_mat = np.loadtxt(os.path.join(dir_name, 'population.txt'))
-
-    _, lattices, types, unwrapped_coords = load_lammps(
-        os.path.join(dir_name, 'traj.lammpstrj'))
-
-    li_diff = compute_diff(types, unwrapped_coords, target_type=90)  # cm^2/s
-    tfsi_diff = compute_diff(types, unwrapped_coords, target_type=93)  # cm^2/s
+    li_diff = get_diffusivity(
+        raw_types, unwrapped_coords, target_type=90)  # cm^2/s
+    tfsi_diff = get_diffusivity(
+        raw_types, unwrapped_coords, target_type=93)  # cm^2/s
 
     assert np.isclose(lattices[0:1], lattices).all()
 
@@ -109,7 +156,6 @@ def lammpstraj2npz(dir_name, out_dir, target_atom_num):
     print('Saving data.')
     print('-' * 80)
     np.savez_compressed(output_file, **data_dict)
-
 
 
 def analyze_all(root_dir, analyze_fn, num_workers=None):
