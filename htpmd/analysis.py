@@ -88,7 +88,7 @@ def get_diffusivity(raw_types, unwrapped_coords, target_type):
     target_idx = np.nonzero(raw_types == target_type)[0]
     target_coords = unwrapped_coords[:, target_idx]
     msd = np.mean(np.sum((target_coords[-1] - target_coords[0])**2, axis=-1))
-    return msd / (len(target_coords) - 1) / 6 * 5e-5 # cm^2/s
+    return msd / (len(target_coords) - 1) / 6 * 5e-5  # cm^2/s
 
 
 def get_polymer_diffusivity(raw_types, atom_types, unwrapped_coords):
@@ -98,7 +98,7 @@ def get_polymer_diffusivity(raw_types, atom_types, unwrapped_coords):
     poly_solvate_idx = np.nonzero(poly_solvate_types)[0]
     target_coords = unwrapped_coords[:, poly_solvate_idx]
     msd = np.mean(np.sum((target_coords[-1] - target_coords[0])**2, axis=-1))
-    return msd / (len(target_coords) - 1) / 6 * 5e-5 # cm^2/s
+    return msd / (len(target_coords) - 1) / 6 * 5e-5  # cm^2/s
 
 
 def get_conductivity(lattices, raw_types, unwrapped_coords, pop_mat):
@@ -108,8 +108,10 @@ def get_conductivity(lattices, raw_types, unwrapped_coords, pop_mat):
     kb_const = 1.38064852e-23
     T = 353.0
 
-    li_diff = get_diffusivity(raw_types, unwrapped_coords, target_type=90)  # cm^2/s
-    tfsi_diff = get_diffusivity(raw_types, unwrapped_coords, target_type=93)  # cm^2/s
+    li_diff = get_diffusivity(
+        raw_types, unwrapped_coords, target_type=90)  # cm^2/s
+    tfsi_diff = get_diffusivity(
+        raw_types, unwrapped_coords, target_type=93)  # cm^2/s
 
     assert np.isclose(lattices[0:1], lattices).all()
 
@@ -154,7 +156,6 @@ def lammpstraj2npz(dir_name, out_dir, target_atom_num):
     print('Saving data.')
     print('-' * 80)
     np.savez_compressed(output_file, **data_dict)
-
 
 
 def analyze_all(root_dir, analyze_fn, num_workers=None):
