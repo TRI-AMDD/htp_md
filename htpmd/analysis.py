@@ -30,6 +30,8 @@ def get_all_properties(dir_name):
         raw_types, unwrapped_coords, target_type=90)
     results['tfsi_diffusivity'] = get_diffusivity(
         raw_types, unwrapped_coords, target_type=93)
+    results['poly_diffusivity'] = get_polymer_diffusivity(
+        raw_types, atom_types, unwrapped_coords)
     results['conductivity'] = get_conductivity(
         lattices, raw_types, unwrapped_coords, pop_mat)
     results['molarity'] = get_molarity(raw_types, atom_types)
@@ -85,6 +87,16 @@ def get_diffusivity(raw_types, unwrapped_coords, target_type):
     """Diffusivity of a specified atom type (unit: cm^2/s)."""
     target_idx = np.nonzero(raw_types == target_type)[0]
     target_coords = unwrapped_coords[:, target_idx]
+    msd = np.mean(np.sum((target_coords[-1] - target_coords[0])**2, axis=-1))
+    return msd / (len(target_coords) - 1) / 6 * 5e-5 # cm^2/s
+
+
+def get_polymer_diffusivity(raw_types, atom_types, unwrapped_coords):
+    # TODO: should F be included?
+    solvate_types = (atom_types == 7) | (atom_types == 8) | (atom_types == 16)
+    poly_solvate_types = (raw_types < 90) & solvate_types
+    poly_solvate_idx = np.nonzero(poly_solvate_types)[0]
+    target_coords = unwrapped_coords[:, poly_solvate_idx]
     msd = np.mean(np.sum((target_coords[-1] - target_coords[0])**2, axis=-1))
     return msd / (len(target_coords) - 1) / 6 * 5e-5 # cm^2/s
 
