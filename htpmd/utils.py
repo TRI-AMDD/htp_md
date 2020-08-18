@@ -29,17 +29,17 @@ _ATOM_MASSES = [
     243.0, 247.0, 247.0, 251.0, 252.0]
 
 
-def load_lammps(lammps_file, use_mass=False, tol=_TOL):
+def load_lammps(lammps_file, tol=_TOL):
     """Load a lammpstraj file.
 
     Args:
         lammps_file: file path
-        use_mass: whether to use mass to determine atom types
 
     Returns:
         coords: shape (F, N, 3)
         lattices: shape (F, 3)
-        types: shape (N,)
+        types: shape (N,), the raw type of atoms in lammps
+        atom_types: shape (N,), the atom types by atomic number
         unwrapped_coords: shape (F, N, 3)
     """
     # Loads lammpstraj file.
@@ -65,18 +65,15 @@ def load_lammps(lammps_file, use_mass=False, tol=_TOL):
     assert np.alltrue((np.max(wrapped_coords, axis=1) -
                        np.min(wrapped_coords, axis=1)) <= lattices)
 
-    if use_mass:
-        new_types = []
-        for mass in masses:
-            diffs = np.abs(mass - _ATOM_MASSES)
-            atomic_number = np.argmin(diffs)
-            assert diffs[atomic_number] <= tol, 'diff is {} for {}'.format(
-                diffs[atomic_number], mass)
-            new_types.append(atomic_number)
-        new_types = np.array(new_types, dtype=np.int32)
-        return wrapped_coords, lattices, new_types, unwrapped_coords
-    else:
-        return wrapped_coords, lattices, types, unwrapped_coords
+    new_types = []
+    for mass in masses:
+        diffs = np.abs(mass - _ATOM_MASSES)
+        atomic_number = np.argmin(diffs)
+        assert diffs[atomic_number] <= tol, 'diff is {} for {}'.format(
+            diffs[atomic_number], mass)
+        new_types.append(atomic_number)
+    new_types = np.array(new_types, dtype=np.int32)
+    return wrapped_coords, lattices, types, new_types, unwrapped_coords
 
 
 def distance_pbc(x0, x1, dimensions):
