@@ -35,6 +35,10 @@ def get_all_properties(dir_name):
     results['conductivity'] = get_conductivity(
         lattices, raw_types, unwrapped_coords, pop_mat)
     results['molarity'] = get_molarity(raw_types, atom_types)
+    results['li_msd_curve'] = get_msd_curve(
+        raw_types, unwrapped_coords, target_type=90)
+    results['tfsi_msd_curve'] = get_msd_curve(
+        raw_types, unwrapped_coords, target_type=93)
     return results
 
 
@@ -99,6 +103,20 @@ def get_polymer_diffusivity(raw_types, atom_types, unwrapped_coords):
     target_coords = unwrapped_coords[:, poly_solvate_idx]
     msd = np.mean(np.sum((target_coords[-1] - target_coords[0])**2, axis=-1))
     return msd / (len(target_coords) - 1) / 6 * 5e-5  # cm^2/s
+
+
+def get_msd_curve(raw_types, unwrapped_coords, target_type):
+    """Computes Mean Squared Dispacement curve (unit: ns, A^2)"""
+    target_idx = np.nonzero(raw_types == target_type)[0]
+    target_coords = unwrapped_coords[:, target_idx]
+
+    ts = np.linspace(1, target_coords.shape[0] - 1, 100, dtype=int)
+    msds = np.array([
+        np.mean(np.sum((target_coords[t:] - target_coords[:-t])**2, axis=-1))
+        for t in ts])
+    # Convert to ns
+    ts = ts * 2e-3
+    return ts, msds
 
 
 def get_conductivity(lattices, raw_types, unwrapped_coords, pop_mat):
