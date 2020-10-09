@@ -1,7 +1,8 @@
 import json
 import os
 import numpy as np
-from .utils import load_lammps, _ATOM_MASSES
+from .utils import load_lammps
+from htpmd.constants import ATOM_MASSES
 
 
 REQUIRED_METADATA = {
@@ -68,7 +69,7 @@ def get_molarity(raw_types, real_types):
     poly_idx = np.nonzero(raw_types < 89)[0]
     li_idx = np.nonzero(real_types == 3)[0]
 
-    atom_masses = np.array(_ATOM_MASSES)
+    atom_masses = np.array(ATOM_MASSES)
 
     poly_mass = np.sum(atom_masses[real_types[poly_idx]])
 
@@ -76,7 +77,7 @@ def get_molarity(raw_types, real_types):
 
 
 def compute_center_of_mass(coords, atom_types):
-    element_masses = np.array(_ATOM_MASSES)
+    element_masses = np.array(ATOM_MASSES)
     atom_masses = element_masses[atom_types]
     return (np.sum(coords * atom_masses[np.newaxis, :, np.newaxis], axis=1) /
             np.sum(atom_masses))
