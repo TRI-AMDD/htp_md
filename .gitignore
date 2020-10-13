@@ -3,3 +3,4 @@ dist/
 build/
 htpmd/__pycache__/
 htpmd/htp_md.egg-info/
+htpmd.egg-info/
