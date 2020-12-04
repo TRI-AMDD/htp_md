@@ -2,6 +2,7 @@ import json
 import os
 import numpy as np
 from .utils import load_lammps
+from pymatgen.core.structure import Structure
 from htpmd.constants import ATOM_MASSES
 
 
@@ -40,6 +41,8 @@ def get_all_properties(dir_name):
         raw_types, unwrapped_coords, target_type=90)
     results['tfsi_msd_curve'] = get_msd_curve(
         raw_types, unwrapped_coords, target_type=93)
+    results['structure'] = get_cif_at_frame(
+        wrapped_coords, lattices, atom_types, k=0)
     return results
 
 
@@ -152,6 +155,18 @@ def get_conductivity(lattices, raw_types, unwrapped_coords, pop_mat):
             total_ion += (i + j) * pop_mat[i, j]
 
     return cond  # S/cm
+
+
+def get_cif_at_frame(wrapped_coords, lattices, atom_types, k):
+    """Computes the cif text representation of the structure at frame k."""
+    structure = Structure(
+        lattice=np.diag(lattices[k]),
+        species=atom_types,
+        coords=wrapped_coords[k],
+        coords_are_cartesian=True,
+        to_unit_cell=True
+    )
+    return structure.to('cif')
 
 
 def lammpstraj2npz(dir_name, out_dir, target_atom_num):
