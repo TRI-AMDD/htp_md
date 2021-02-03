@@ -5,6 +5,7 @@ from .utils import load_lammps
 from pymatgen.core.structure import Structure
 from htpmd.constants import ATOM_MASSES
 from htpmd.trajectory.load import LammpsTrajectoryLoader
+from htpmd.shared.transport import compute_diffusivity
 
 
 REQUIRED_METADATA = {
@@ -27,10 +28,8 @@ def get_all_properties(dir_name):
     results = dict()
     results.update(metadata)
     traj.remove_drift()
-    results['li_diffusivity'] = get_diffusivity(
-        traj.raw_types, traj.unwrapped_coords, target_type=90)
-    results['tfsi_diffusivity'] = get_diffusivity(
-        traj.raw_types, traj.unwrapped_coords, target_type=93)
+    results['li_diffusivity'] = compute_diffusivity(traj, target_type=90)
+    results['tfsi_diffusivity'] = compute_diffusivity(traj, target_type=93)
     results['poly_diffusivity'] = get_polymer_diffusivity(
         traj.raw_types, traj.atom_types, traj.unwrapped_coords)
     results['conductivity'] = get_conductivity(
