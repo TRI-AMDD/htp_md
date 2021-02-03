@@ -1,25 +1,19 @@
-import unittest
 import json
 import os
+import pytest
 from htpmd.analysis import get_all_properties
 
-
-class TestGetAllProperties(unittest.TestCase):
-    def test_success_run(self):
-        dir_lists = [
-            '9-0-246295613-0',
-            '9-0-413610210-0']
-        for dir_name in dir_lists:
-            with self.subTest():
-                results = get_all_properties(
-                    os.path.join('test_data', dir_name))
-                with open(os.path.join(
-                    'test_data', 'test_results', dir_name + '.json')) as f:
-                    correct_results = json.load(f)
-                # Only compare the subset that is recorded
-                subset_results = {k: results[k] for k in correct_results.keys()}
-                self.assertDictEqual(subset_results, correct_results)
-
-
-if __name__ == '__main__':
-    unittest.main()
+@pytest.mark.parametrize(
+    'dir_name',
+    [
+        ('test_data/9-0-246295613-0'),
+        ('test_data/9-0-413610210-0'),
+    ])
+def test_get_all_properties(dir_name):
+    results = get_all_properties(dir_name)
+    property_list = [
+        'li_diffusivity', 'tfsi_diffusivity', 'poly_diffusivity',
+        'conductivity', 'molarity', 'li_msd_curve', 'tfsi_msd_curve',
+        'structure', 'mol_smiles', 'poly_smiles', 'force_field',
+        'material_group','temperature', 'time_step']
+    assert set(property_list) == set(list(results.keys()))

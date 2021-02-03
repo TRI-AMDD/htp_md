@@ -4,20 +4,11 @@ import numpy as np
 from .utils import load_lammps
 from pymatgen.core.structure import Structure
 from htpmd.constants import ATOM_MASSES
-from htpmd.trajectory.load import LammpsTrajectoryLoader
+from htpmd.trajectory.load import (
+    LammpsTrajectoryLoader, get_metadata, get_population_matrix)
 from htpmd.shared.polymer import (
     compute_diffusivity, compute_polymer_diffusivity, compute_molarity,
     compute_conductivity, compute_msd_curve, get_cif_at_frame)
-
-
-REQUIRED_METADATA = {
-    'mol_smiles',  # Smiles for molecule. E.g. '[Cu]CCO[Au]' for PEO
-    'poly_smiles',  # Smiles for polymer.  E.g. 'CCOCCOCCOCCOCCOCCO' for PEO
-    'force_field',  # Force field. E.g. 'PCFF+'
-    'material_group',  # Type of materials. E.g. polymer
-    'temperature',  # Temperature in K. E.g. 353
-    'time_step',  # timestep in fs. E.g. 2.
-}
 
 
 def get_all_properties(dir_name):
@@ -39,19 +30,6 @@ def get_all_properties(dir_name):
     results['tfsi_msd_curve'] = compute_msd_curve(traj, target_type=93)
     results['structure'] = get_cif_at_frame(traj, k=0)
     return results
-
-
-def get_metadata(dir_name):
-    with open(os.path.join(dir_name, 'meta.json')) as f:
-        metadata = json.load(f)
-    assert set(metadata.keys()).issuperset(REQUIRED_METADATA)
-    return metadata
-
-
-def get_population_matrix(dir_name):
-    """Load the population matrix computed by lammps."""
-    pop_mat = np.loadtxt(os.path.join(dir_name, 'population.txt'))
-    return pop_mat
 
 
 def lammpstraj2npz(dir_name, out_dir, target_atom_num):
