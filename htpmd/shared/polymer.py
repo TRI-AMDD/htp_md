@@ -1,5 +1,14 @@
 """
 Module for methods to compute properties for the polymer electrolytes.
+
+This module implements several analysis functions for the polymer electrolyte
+MD data described in paper [1]. Currently, they cannot be directly used in
+other datasets because some data-specific constants are written in the
+functions. However, users can still reuse these functions after minor
+modifications. We are working on making the functions more general and users
+are encouraged to contribute.
+
+[1] Xie, et al. arXiv preprint arXiv:2101.05339 (2021).
 """
 import numpy as np
 
