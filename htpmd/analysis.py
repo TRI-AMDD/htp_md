@@ -5,7 +5,7 @@ from .utils import load_lammps
 from pymatgen.core.structure import Structure
 from htpmd.constants import ATOM_MASSES
 from htpmd.trajectory.load import LammpsTrajectoryLoader
-from htpmd.shared.transport import compute_diffusivity, compute_polymer_diffusivity
+from htpmd.shared.polymer import compute_diffusivity, compute_polymer_diffusivity
 
 
 REQUIRED_METADATA = {
