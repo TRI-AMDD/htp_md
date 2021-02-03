@@ -85,12 +85,16 @@ class Trajectory:
         self._raw_types = val
 
     @property
-    def new_types(self):
-        return self._new_types
+    def atom_types(self):
+        return self._atom_types
 
-    @new_types.setter
-    def new_types(self, val):
-        self._new_types = val
+    @atom_types.setter
+    def atom_types(self, val):
+        self._atom_types = val
+
+    @property
+    def lattices(self):
+        return self.all_lengths
 
 
 class ExtendedLAMMPSTrajectoryFile(LAMMPSTrajectoryFile, Trajectory):
@@ -298,4 +302,20 @@ class ExtendedLAMMPSTrajectoryFile(LAMMPSTrajectoryFile, Trajectory):
             diffs = np.abs(mass - ATOM_MASSES)
             atomic_number = np.argmin(diffs)
             new_types.append(atomic_number)
-        self.new_types = np.array(new_types, dtype=np.int32)
+        self.atom_types = np.array(new_types, dtype=np.int32)
+
+    def remove_drift(self):
+        self.unwrapped_coords = _get_coords_without_drift(
+            self.unwrapped_coords, self.atom_types)
+
+
+def _compute_center_of_mass(coords, atom_types):
+    element_masses = np.array(ATOM_MASSES)
+    atom_masses = element_masses[atom_types]
+    return (np.sum(coords * atom_masses[np.newaxis, :, np.newaxis], axis=1) /
+            np.sum(atom_masses))
+
+
+def _get_coords_without_drift(coords, atom_types):
+    cos_coord = _compute_center_of_mass(coords, atom_types)
+    return coords - cos_coord[:, np.newaxis]

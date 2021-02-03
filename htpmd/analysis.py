@@ -4,6 +4,7 @@ import numpy as np
 from .utils import load_lammps
 from pymatgen.core.structure import Structure
 from htpmd.constants import ATOM_MASSES
+from htpmd.trajectory.load import LammpsTrajectoryLoader
 
 
 REQUIRED_METADATA = {
@@ -18,31 +19,29 @@ REQUIRED_METADATA = {
 
 def get_all_properties(dir_name):
     # Load trajectories and pre-computed properties
-    wrapped_coords, lattices, raw_types, atom_types, unwrapped_coords = (
-        get_raw_traj(dir_name))
+    traj = LammpsTrajectoryLoader().load(dir_name)
     pop_mat = get_population_matrix(dir_name)
     metadata = get_metadata(dir_name)
 
     # Compute properties
     results = dict()
     results.update(metadata)
-    # Remove COS drift
-    unwrapped_coords = get_coords_without_drift(unwrapped_coords, atom_types)
+    traj.remove_drift()
     results['li_diffusivity'] = get_diffusivity(
-        raw_types, unwrapped_coords, target_type=90)
+        traj.raw_types, traj.unwrapped_coords, target_type=90)
     results['tfsi_diffusivity'] = get_diffusivity(
-        raw_types, unwrapped_coords, target_type=93)
+        traj.raw_types, traj.unwrapped_coords, target_type=93)
     results['poly_diffusivity'] = get_polymer_diffusivity(
-        raw_types, atom_types, unwrapped_coords)
+        traj.raw_types, traj.atom_types, traj.unwrapped_coords)
     results['conductivity'] = get_conductivity(
-        lattices, raw_types, unwrapped_coords, pop_mat)
-    results['molarity'] = get_molarity(raw_types, atom_types)
+        traj.lattices, traj.raw_types, traj.unwrapped_coords, pop_mat)
+    results['molarity'] = get_molarity(traj.raw_types, traj.atom_types)
     results['li_msd_curve'] = get_msd_curve(
-        raw_types, unwrapped_coords, target_type=90)
+        traj.raw_types, traj.unwrapped_coords, target_type=90)
     results['tfsi_msd_curve'] = get_msd_curve(
-        raw_types, unwrapped_coords, target_type=93)
+        traj.raw_types, traj.unwrapped_coords, target_type=93)
     results['structure'] = get_cif_at_frame(
-        wrapped_coords, lattices, atom_types, k=0)
+        traj.wrapped_coords, traj.lattices, traj.atom_types, k=0)
     return results
 
 
