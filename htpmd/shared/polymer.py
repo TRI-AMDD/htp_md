@@ -222,6 +222,46 @@ def compute_msd_curve(trajectory, **params):
     return ts, msds
 
 
+def compute_ngp_curve(trajectory, **params):
+    """
+    Description:
+        Computes non-Gaussian parameter curve (unit: ns, dimensionless)
+    Version: 1.0.0
+    Author:
+        Name:                                           Arthur France-Lanord
+        Affiliation:                                    MIT
+        Email:                                          <optional>
+    Args:
+        trajectory (trajectory.base.Trajectory):        trajectory to compute metric on
+        **params:                                       Methodology specific parameters.
+                                                        Required fields:
+                                                            target_type (int)
+    Returns:
+        ts:                                              time series (np.array)
+        ngps:                                            non-Gaussian parameter (np.array)
+    """
+
+    required_parameters = ('target_type', )
+    check_params(required_parameters, params)
+
+    target_idx = np.nonzero(trajectory.raw_types == params['target_type'])[0]
+    target_coords = trajectory.unwrapped_coords[:, target_idx]
+
+    ts = np.linspace(1, target_coords.shape[0] - 1, 100, dtype=int)
+    msds = np.array([
+        np.mean(np.sum((target_coords[t:] - target_coords[:-t])**2, axis=-1))
+        for t in ts])
+    mfds = np.array([
+        np.mean(np.sum((target_coords[t:] - target_coords[:-t])**2, axis=-1)**2)
+        for t in ts])
+    ngps = np.array([
+        (3*mfds)/(5*msds*msds)-1.])
+
+    # Convert to ns
+    ts = ts * 2e-3
+    return ts, ngps
+
+
 def get_cif_at_frame(trajectory, **params):
     """
     Description:
