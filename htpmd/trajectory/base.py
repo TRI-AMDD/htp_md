@@ -124,7 +124,7 @@ class ExtendedLAMMPSTrajectoryFile(LAMMPSTrajectoryFile, Trajectory):
             The lengths (a,b,c) of the unit cell for each frame, or None if
             the information is not present in the file.
         cell_angles : np.ndarray, None
-            The angles (\alpha, \beta, \gamma) defining the unit cell for
+            The angles (\\alpha, \\beta, \\gamma) defining the unit cell for
             each frame, or None if  the information is not present in the file.
         """
         if not self._mode == 'r':
