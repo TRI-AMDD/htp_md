@@ -1,0 +1,5 @@
+# Requirements for running tests
+pytest==6.2.2
+flake8==3.8.4
+pydocstyle==5.1.1
+pycodestyle==2.6.0

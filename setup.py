@@ -1,11 +1,21 @@
+import os
 from setuptools import setup, find_packages
-from os import path
+from pip._internal.req import parse_requirements
+from pip._internal.network.session import PipSession
 
-here = path.abspath(path.dirname(__file__))
-with open(path.join(here, 'README.md'), encoding='utf-8') as f:
+this_dir = os.path.dirname(os.path.abspath(__file__))
+pip_requirements = parse_requirements(
+    os.path.join(this_dir, "requirements.txt"), PipSession())
+pip_requirements_test = parse_requirements(
+    os.path.join(this_dir, "requirements-test.txt"), PipSession())
+
+reqs = [pii.requirement for pii in pip_requirements]
+reqs_test = [pii.requirement for pii in pip_requirements_test]
+
+readme_path = os.path.join(this_dir, "README.md")
+
+with open(readme_path, "r") as f:
     long_description = f.read()
-with open(path.join(here, 'requirements.txt')) as f:
-    requires = f.read().strip().split('\n')
 
 setup(
     name='htpmd',
@@ -16,7 +26,8 @@ setup(
     url='',
     packages=find_packages(),
     python_requires='>=3.7',
-    install_requires=requires,
+    install_requires=reqs,
+    extras_require={"tests": reqs_test},
     entry_points={
         'console_scripts': [
             'htpmd=htpmd.main:main',
