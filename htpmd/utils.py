@@ -1,5 +1,6 @@
 from __future__ import print_function, division
 import numpy as np
+import warnings
 
 from htpmd.trajectory.base import ExtendedLAMMPSTrajectoryFile
 from htpmd.constants import ATOM_MASSES
