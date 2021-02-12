@@ -34,6 +34,7 @@ jobs:
         shell: pwsh
         run: |
           conda install --file=requirements.txt --file=requirements-test.txt
+          conda config --append channels conda-forge
 
       - name: pytest
         shell: pwsh
