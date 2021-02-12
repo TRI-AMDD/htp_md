@@ -1,4 +1,4 @@
-name: Test PR
+name: Test PR - Windows
 
 on:
   pull_request:
