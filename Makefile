@@ -6,7 +6,7 @@ workspace = $(shell pwd)
 env = local
 
 clean:
-	rm -rf .coverage 
+	rm -rf .coverage  coverage_reports
 
 lint:
 	pycodestyle htpmd
@@ -16,7 +16,7 @@ lint:
 test:
 	pytest htpmd --color=yes --cov=htpmd --cov-config=.coveragerc --cov-report html:coverage_reports
 
-clean-docker:
+clean-docker: clean
 	docker rm -f ${name}  || true
 	docker rm -f ${build_tag}  || true
 
