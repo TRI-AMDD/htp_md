@@ -33,7 +33,7 @@ jobs:
       - name: Install dependencies
         shell: pwsh
         run: |
-          conda install --file=requirements.text --file=requirements-test.txt
+          conda install --file=requirements.txt --file=requirements-test.txt
 
       - name: pytest
         shell: pwsh
