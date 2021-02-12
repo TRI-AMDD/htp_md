@@ -10,7 +10,7 @@ jobs:
     strategy:
       max-parallel: 20
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        os: [windows-latest]
         python-version: [3.7]
 
     runs-on: ${{ matrix.os }}
@@ -26,9 +26,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip
-          pip install --upgrade wheel
-          pip install -e .[tests]
+          conda install --file=requirements.text --file=requirements-test.txt
 
       - name: pytest
         run: |
