@@ -82,7 +82,7 @@ def compute_polymer_diffusivity(trajectory, **params):
     # TODO: should F be included?
     solvate_types = (
         (trajectory.atom_types == 7) | (trajectory.atom_types == 8) |
-         (trajectory.atom_types == 16))
+        (trajectory.atom_types == 16))
     poly_solvate_types = (trajectory.raw_types < 90) & solvate_types
     poly_solvate_idx = np.nonzero(poly_solvate_types)[0]
     target_coords = trajectory.unwrapped_coords[:, poly_solvate_idx]
