@@ -112,3 +112,6 @@ ENV/
 !*.vscode/extensions.json
 *.code-workspace
 coverage_reports
+
+# idea
+.idea
