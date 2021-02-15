@@ -1,8 +1,6 @@
-import json
 import os
 import numpy as np
 from .utils import load_lammps
-from pymatgen.core.structure import Structure
 from htpmd.constants import TargetType
 from htpmd.trajectory.load import (
     LammpsTrajectoryLoader, get_metadata, get_population_matrix)
