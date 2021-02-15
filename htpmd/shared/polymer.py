@@ -13,7 +13,7 @@ are encouraged to contribute.
 import numpy as np
 
 from htpmd.shared.utils import check_params
-from htpmd.constants import ATOM_MASSES
+from htpmd.constants import ATOM_MASSES, FARADAY_CONSTANT, BOLTZMANN_CONSTANT
 from pymatgen.core.structure import Structure
 
 
@@ -154,8 +154,6 @@ def compute_conductivity(trajectory, **params):
     check_params(required_parameters, params)
 
     max_cluster = 10
-    e_const = 1.6021766209e-19
-    kb_const = 1.38064852e-23
     T = 353.0
     pop_mat = params['pop_mat']
 
@@ -172,10 +170,10 @@ def compute_conductivity(trajectory, **params):
     for i in range(max_cluster):
         for j in range(max_cluster):
             if i > j:
-                cond += e_const**2 / V / kb_const / T * \
+                cond += FARADAY_CONSTANT**2 / V / BOLTZMANN_CONSTANT / T * \
                     (i - j)**2 * pop_mat[i, j] * li_diff
             elif i < j:
-                cond += e_const**2 / V / kb_const / T * \
+                cond += FARADAY_CONSTANT**2 / V / BOLTZMANN_CONSTANT / T * \
                     (i - j)**2 * pop_mat[i, j] * tfsi_diff
             else:
                 pass
