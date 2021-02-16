@@ -62,8 +62,8 @@ def compute_diffusivity(trajectory, **params):
     target_idx = np.nonzero(trajectory.raw_types == params['target_type'])[0]
     target_coords = trajectory.unwrapped_coords[:, target_idx]
     msd = np.mean(np.sum((target_coords[-1] - target_coords[0])**2, axis=-1))
-    diffusivity = msd / (len(target_coords) - 1) / 6 / DELTA_T # A^2/s
-    diffusivity = diffusivity * (ANGSTROM / CENTIMETER)**2 # cm^2/s
+    diffusivity = msd / (len(target_coords) - 1) / 6 / DELTA_T  # A^2/s
+    diffusivity = diffusivity * (ANGSTROM / CENTIMETER)**2  # cm^2/s
     return diffusivity
 
 
@@ -100,8 +100,8 @@ def compute_polymer_diffusivity(trajectory, **params):
     poly_solvate_idx = np.nonzero(poly_solvate_types)[0]
     target_coords = trajectory.unwrapped_coords[:, poly_solvate_idx]
     msd = np.mean(np.sum((target_coords[-1] - target_coords[0])**2, axis=-1))
-    diffusivity = msd / (len(target_coords) - 1) / 6 / DELTA_T # A^2/s
-    diffusivity = diffusivity * (ANGSTROM / CENTIMETER)**2 # cm^2/s
+    diffusivity = msd / (len(target_coords) - 1) / 6 / DELTA_T  # A^2/s
+    diffusivity = diffusivity * (ANGSTROM / CENTIMETER)**2  # cm^2/s
     return diffusivity
 
 
@@ -177,7 +177,7 @@ def compute_conductivity(trajectory, **params):
 
     assert np.isclose(trajectory.lattices[0:1], trajectory.lattices).all()
 
-    V = np.prod(trajectory.lattices[0]) * (ANGSTROM / CENTIMETER)**3 # cm^3
+    V = np.prod(trajectory.lattices[0]) * (ANGSTROM / CENTIMETER)**3  # cm^3
 
     cond = 0.
     total_ion = 0.
