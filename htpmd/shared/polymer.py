@@ -21,7 +21,8 @@ from htpmd.constants import ATOM_MASSES, \
     NANOSECOND, \
     PICOSECOND, \
     KILOGRAM, \
-    TargetType
+    TargetType, \
+    RAW_TYPE_POLYMER_THRESHOLD
 from pymatgen.core.structure import Structure
 
 DELTA_T = 2 * PICOSECOND
@@ -94,7 +95,7 @@ def compute_polymer_diffusivity(trajectory, **params):
     solvate_types = (
         (trajectory.atom_types == 7) | (trajectory.atom_types == 8) |
         (trajectory.atom_types == 16))
-    poly_solvate_types = (trajectory.raw_types < 90) & solvate_types
+    poly_solvate_types = (trajectory.raw_types < RAW_TYPE_POLYMER_THRESHOLD) & solvate_types
     poly_solvate_idx = np.nonzero(poly_solvate_types)[0]
     target_coords = trajectory.unwrapped_coords[:, poly_solvate_idx]
     msd = np.mean(np.sum((target_coords[-1] - target_coords[0])**2, axis=-1))
@@ -127,7 +128,7 @@ def compute_molarity(trajectory, **params):
     required_parameters = tuple()
     check_params(required_parameters, params)
 
-    poly_idx = np.nonzero(trajectory.raw_types < 89)[0]
+    poly_idx = np.nonzero(trajectory.raw_types < RAW_TYPE_POLYMER_THRESHOLD)[0]
     li_idx = np.nonzero(trajectory.atom_types == 3)[0]
 
     atom_masses = np.array(ATOM_MASSES)
