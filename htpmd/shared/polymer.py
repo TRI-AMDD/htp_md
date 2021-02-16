@@ -175,7 +175,7 @@ def compute_conductivity(trajectory, **params):
 
     assert np.isclose(trajectory.lattices[0:1], trajectory.lattices).all()
 
-    V = np.prod(trajectory.lattices[0]) * 1e-24  # cm^3
+    V = np.prod(trajectory.lattices[0]) * (ANGSTROM / CENTIMETER)**3 # cm^3
 
     cond = 0.
     total_ion = 0.
