@@ -34,10 +34,10 @@ RAW_TYPE_POLYMER_THRESHOLD = 90
 
 class AtomType:
 
-    LI = 3
-    N = 7
-    O = 8
-    S = 16
+    LITHIUM = 3
+    NITROGEN = 7
+    OXYGEN = 8
+    SULFUR = 16
 
 
 class RawType:

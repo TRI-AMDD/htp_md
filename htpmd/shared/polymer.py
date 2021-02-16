@@ -94,8 +94,8 @@ def compute_polymer_diffusivity(trajectory, **params):
 
     # TODO: should F be included?
     solvate_types = (
-        (trajectory.atom_types == AtomType.N) | (trajectory.atom_types == AtomType.O) |
-        (trajectory.atom_types == AtomType.S))
+            (trajectory.atom_types == AtomType.NITROGEN) | (trajectory.atom_types == AtomType.OXYGEN) |
+            (trajectory.atom_types == AtomType.SULFUR))
     poly_solvate_types = (trajectory.raw_types < RAW_TYPE_POLYMER_THRESHOLD) & solvate_types
     poly_solvate_idx = np.nonzero(poly_solvate_types)[0]
     target_coords = trajectory.unwrapped_coords[:, poly_solvate_idx]
@@ -130,7 +130,7 @@ def compute_molarity(trajectory, **params):
     check_params(required_parameters, params)
 
     poly_idx = np.nonzero(trajectory.raw_types < RAW_TYPE_POLYMER_THRESHOLD)[0]
-    li_idx = np.nonzero(trajectory.atom_types == AtomType.LI)[0]
+    li_idx = np.nonzero(trajectory.atom_types == AtomType.LITHIUM)[0]
 
     atom_masses = np.array(ATOM_MASSES)
 
