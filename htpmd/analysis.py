@@ -1,7 +1,7 @@
 import os
 import numpy as np
 from .utils import load_lammps
-from htpmd.constants import TargetType
+from htpmd.constants import RawType
 from htpmd.trajectory.load import (
     LammpsTrajectoryLoader, get_metadata, get_population_matrix)
 from htpmd.shared.polymer import (
@@ -19,13 +19,13 @@ def get_all_properties(dir_name):
     results = dict()
     results.update(metadata)
     traj.remove_drift()
-    results['li_diffusivity'] = compute_diffusivity(traj, target_type=TargetType.LI)
-    results['tfsi_diffusivity'] = compute_diffusivity(traj, target_type=TargetType.TFSI)
+    results['li_diffusivity'] = compute_diffusivity(traj, target_type=RawType.LI)
+    results['tfsi_diffusivity'] = compute_diffusivity(traj, target_type=RawType.TFSI)
     results['poly_diffusivity'] = compute_polymer_diffusivity(traj)
     results['conductivity'] = compute_conductivity(traj, pop_mat=pop_mat)
     results['molarity'] = compute_molarity(traj)
-    results['li_msd_curve'] = compute_msd_curve(traj, target_type=TargetType.LI)
-    results['tfsi_msd_curve'] = compute_msd_curve(traj, target_type=TargetType.TFSI)
+    results['li_msd_curve'] = compute_msd_curve(traj, target_type=RawType.LI)
+    results['tfsi_msd_curve'] = compute_msd_curve(traj, target_type=RawType.TFSI)
     results['structure'] = get_cif_at_frame(traj, k=0)
     return results
 
