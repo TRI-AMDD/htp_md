@@ -13,7 +13,7 @@ are encouraged to contribute.
 import numpy as np
 
 from htpmd.shared.utils import check_params
-from htpmd.constants import ATOM_MASSES, FARADAY_CONSTANT, BOLTZMANN_CONSTANT
+from htpmd.constants import ATOM_MASSES, FARADAY_CONSTANT, BOLTZMANN_CONSTANT, TargetType
 from pymatgen.core.structure import Structure
 
 
@@ -157,8 +157,8 @@ def compute_conductivity(trajectory, **params):
     T = 353.0
     pop_mat = params['pop_mat']
 
-    li_diff = compute_diffusivity(trajectory, target_type=90)  # cm^2/s
-    tfsi_diff = compute_diffusivity(trajectory, target_type=93)  # cm^2/s
+    li_diff = compute_diffusivity(trajectory, target_type=TargetType.LI)  # cm^2/s
+    tfsi_diff = compute_diffusivity(trajectory, target_type=TargetType.TFSI)  # cm^2/s
 
     assert np.isclose(trajectory.lattices[0:1], trajectory.lattices).all()
 
