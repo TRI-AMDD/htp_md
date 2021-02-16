@@ -60,8 +60,8 @@ def compute_diffusivity(trajectory, **params):
     target_idx = np.nonzero(trajectory.raw_types == params['target_type'])[0]
     target_coords = trajectory.unwrapped_coords[:, target_idx]
     msd = np.mean(np.sum((target_coords[-1] - target_coords[0])**2, axis=-1))
-    diffusivity = msd / (len(target_coords) - 1) / 6 * DELTA_T # A^2/ps
-    diffusivity = diffusivity * (CENTIMETER / ANGSTROM)**2 * PICOSECOND # cm^2/s
+    diffusivity = msd / (len(target_coords) - 1) / 6 / DELTA_T # A^2/s
+    diffusivity = diffusivity * (ANGSTROM / CENTIMETER)**2 # cm^2/s
     return diffusivity
 
 
@@ -98,8 +98,8 @@ def compute_polymer_diffusivity(trajectory, **params):
     poly_solvate_idx = np.nonzero(poly_solvate_types)[0]
     target_coords = trajectory.unwrapped_coords[:, poly_solvate_idx]
     msd = np.mean(np.sum((target_coords[-1] - target_coords[0])**2, axis=-1))
-    diffusivity = msd / (len(target_coords) - 1) / 6 * DELTA_T # A^2/ps
-    diffusivity = diffusivity * (CENTIMETER / ANGSTROM)**2 * PICOSECOND # cm^2/s
+    diffusivity = msd / (len(target_coords) - 1) / 6 / DELTA_T # A^2/s
+    diffusivity = diffusivity * (ANGSTROM / CENTIMETER)**2 # cm^2/s
     return diffusivity
 
 
