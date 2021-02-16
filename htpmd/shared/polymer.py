@@ -19,6 +19,7 @@ from htpmd.constants import ATOM_MASSES, \
     ANGSTROM, \
     CENTIMETER, \
     PICOSECOND, \
+    KILOGRAM, \
     TargetType
 from pymatgen.core.structure import Structure
 
@@ -132,7 +133,7 @@ def compute_molarity(trajectory, **params):
 
     poly_mass = np.sum(atom_masses[trajectory.atom_types[poly_idx]])
 
-    return float(len(li_idx)) / poly_mass * 1e3
+    return float(len(li_idx)) / poly_mass * KILOGRAM
 
 
 def compute_conductivity(trajectory, **params):
