@@ -18,6 +18,7 @@ from htpmd.constants import ATOM_MASSES, \
     BOLTZMANN_CONSTANT, \
     ANGSTROM, \
     CENTIMETER, \
+    NANOSECOND, \
     PICOSECOND, \
     KILOGRAM, \
     TargetType
@@ -228,7 +229,7 @@ def compute_msd_curve(trajectory, **params):
         np.mean(np.sum((target_coords[t:] - target_coords[:-t])**2, axis=-1))
         for t in ts])
     # Convert to ns
-    ts = ts * 2e-3
+    ts = ts * DELTA_T * NANOSECOND / PICOSECOND
     return ts, msds
 
 
@@ -268,7 +269,7 @@ def compute_ngp_curve(trajectory, **params):
         (3*mfds)/(5*msds*msds)-1.])
 
     # Convert to ns
-    ts = ts * 2e-3
+    ts = ts * DELTA_T * NANOSECOND / PICOSECOND
     return ts, ngps
 
 
