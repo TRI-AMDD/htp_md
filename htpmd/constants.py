@@ -32,6 +32,14 @@ KILOGRAM = 1e3
 RAW_TYPE_POLYMER_THRESHOLD = 90
 
 
+class AtomType:
+
+    LI = 3
+    N = 7
+    O = 8
+    S = 16
+
+
 class RawType:
 
     LI = 90
