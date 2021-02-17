@@ -33,6 +33,7 @@ RAW_TYPE_POLYMER_THRESHOLD = 90
 
 
 class AtomType:
+    """Atomic numbers of different elements."""
 
     LITHIUM = 3
     NITROGEN = 7
@@ -41,6 +42,10 @@ class AtomType:
 
 
 class RawType:
+    """
+    Raw atom type number used in LAMMPS.
+    (Same element may have multiple raw types.)
+    """
 
-    LI = 90
-    TFSI = 93
+    LI = 90  # Li+
+    TFSI = 93  # N atom in the TFSI-
