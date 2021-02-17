@@ -29,8 +29,6 @@ NANOSECOND = 1e-9
 PICOSECOND = 1e-12
 KILOGRAM = 1e3
 
-RAW_TYPE_POLYMER_THRESHOLD = 90
-
 
 class AtomType:
     """Atomic numbers of different elements."""

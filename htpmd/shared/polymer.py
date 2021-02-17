@@ -22,11 +22,11 @@ from htpmd.constants import ATOM_MASSES, \
     PICOSECOND, \
     KILOGRAM, \
     RawType, \
-    AtomType, \
-    RAW_TYPE_POLYMER_THRESHOLD
+    AtomType
 from pymatgen.core.structure import Structure
 
 DELTA_T = 2 * PICOSECOND
+RAW_TYPE_POLYMER_THRESHOLD = 90
 
 
 def compute_diffusivity(trajectory, **params):
