@@ -17,3 +17,33 @@ ATOM_MASSES = [
     195.084, 196.966569, 200.592, 204.38, 207.2, 208.9804, 209.0, 210.0,
     222.0, 223.0, 226.0, 227.0, 232.0377, 231.03588, 238.02891, 237.0, 244.0,
     243.0, 247.0, 247.0, 251.0, 252.0]
+
+
+FARADAY_CONSTANT = 1.6021766209e-19
+BOLTZMANN_CONSTANT = 1.38064852e-23
+
+
+ANGSTROM = 1e-10
+CENTIMETER = 1e-2
+NANOSECOND = 1e-9
+PICOSECOND = 1e-12
+KILOGRAM = 1e3
+
+
+class AtomType:
+    """Atomic numbers of different elements."""
+
+    LITHIUM = 3
+    NITROGEN = 7
+    OXYGEN = 8
+    SULFUR = 16
+
+
+class RawType:
+    """
+    Raw atom type number used in LAMMPS.
+    (Same element may have multiple raw types.)
+    """
+
+    LI = 90  # Li+
+    TFSI = 93  # N atom in the TFSI-

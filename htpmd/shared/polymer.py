@@ -13,8 +13,20 @@ are encouraged to contribute.
 import numpy as np
 
 from htpmd.shared.utils import check_params
-from htpmd.constants import ATOM_MASSES
+from htpmd.constants import ATOM_MASSES, \
+    FARADAY_CONSTANT, \
+    BOLTZMANN_CONSTANT, \
+    ANGSTROM, \
+    CENTIMETER, \
+    NANOSECOND, \
+    PICOSECOND, \
+    KILOGRAM, \
+    RawType, \
+    AtomType
 from pymatgen.core.structure import Structure
+
+DELTA_T = 2 * PICOSECOND
+RAW_TYPE_POLYMER_THRESHOLD = 90
 
 
 def compute_diffusivity(trajectory, **params):
@@ -50,7 +62,8 @@ def compute_diffusivity(trajectory, **params):
     target_idx = np.nonzero(trajectory.raw_types == params['target_type'])[0]
     target_coords = trajectory.unwrapped_coords[:, target_idx]
     msd = np.mean(np.sum((target_coords[-1] - target_coords[0])**2, axis=-1))
-    diffusivity = msd / (len(target_coords) - 1) / 6 * 5e-5  # cm^2/s
+    diffusivity = msd / (len(target_coords) - 1) / 6 / DELTA_T  # A^2/s
+    diffusivity = diffusivity * (ANGSTROM / CENTIMETER)**2  # cm^2/s
     return diffusivity
 
 
@@ -81,13 +94,15 @@ def compute_polymer_diffusivity(trajectory, **params):
 
     # TODO: should F be included?
     solvate_types = (
-        (trajectory.atom_types == 7) | (trajectory.atom_types == 8) |
-        (trajectory.atom_types == 16))
-    poly_solvate_types = (trajectory.raw_types < 90) & solvate_types
+            (trajectory.atom_types == AtomType.NITROGEN) | (trajectory.atom_types == AtomType.OXYGEN) |
+            (trajectory.atom_types == AtomType.SULFUR))
+    poly_solvate_types = (trajectory.raw_types < RAW_TYPE_POLYMER_THRESHOLD) & solvate_types
     poly_solvate_idx = np.nonzero(poly_solvate_types)[0]
     target_coords = trajectory.unwrapped_coords[:, poly_solvate_idx]
     msd = np.mean(np.sum((target_coords[-1] - target_coords[0])**2, axis=-1))
-    return msd / (len(target_coords) - 1) / 6 * 5e-5  # cm^2/s
+    diffusivity = msd / (len(target_coords) - 1) / 6 / DELTA_T  # A^2/s
+    diffusivity = diffusivity * (ANGSTROM / CENTIMETER)**2  # cm^2/s
+    return diffusivity
 
 
 def compute_molarity(trajectory, **params):
@@ -114,14 +129,14 @@ def compute_molarity(trajectory, **params):
     required_parameters = tuple()
     check_params(required_parameters, params)
 
-    poly_idx = np.nonzero(trajectory.raw_types < 89)[0]
-    li_idx = np.nonzero(trajectory.atom_types == 3)[0]
+    poly_idx = np.nonzero(trajectory.raw_types < RAW_TYPE_POLYMER_THRESHOLD)[0]
+    li_idx = np.nonzero(trajectory.atom_types == AtomType.LITHIUM)[0]
 
     atom_masses = np.array(ATOM_MASSES)
 
     poly_mass = np.sum(atom_masses[trajectory.atom_types[poly_idx]])
 
-    return float(len(li_idx)) / poly_mass * 1e3
+    return float(len(li_idx)) / poly_mass * KILOGRAM
 
 
 def compute_conductivity(trajectory, **params):
@@ -154,17 +169,15 @@ def compute_conductivity(trajectory, **params):
     check_params(required_parameters, params)
 
     max_cluster = 10
-    e_const = 1.6021766209e-19
-    kb_const = 1.38064852e-23
     T = 353.0
     pop_mat = params['pop_mat']
 
-    li_diff = compute_diffusivity(trajectory, target_type=90)  # cm^2/s
-    tfsi_diff = compute_diffusivity(trajectory, target_type=93)  # cm^2/s
+    li_diff = compute_diffusivity(trajectory, target_type=RawType.LI)  # cm^2/s
+    tfsi_diff = compute_diffusivity(trajectory, target_type=RawType.TFSI)  # cm^2/s
 
     assert np.isclose(trajectory.lattices[0:1], trajectory.lattices).all()
 
-    V = np.prod(trajectory.lattices[0]) * 1e-24  # cm^3
+    V = np.prod(trajectory.lattices[0]) * (ANGSTROM / CENTIMETER)**3  # cm^3
 
     cond = 0.
     total_ion = 0.
@@ -172,10 +185,10 @@ def compute_conductivity(trajectory, **params):
     for i in range(max_cluster):
         for j in range(max_cluster):
             if i > j:
-                cond += e_const**2 / V / kb_const / T * \
+                cond += FARADAY_CONSTANT**2 / V / BOLTZMANN_CONSTANT / T * \
                     (i - j)**2 * pop_mat[i, j] * li_diff
             elif i < j:
-                cond += e_const**2 / V / kb_const / T * \
+                cond += FARADAY_CONSTANT**2 / V / BOLTZMANN_CONSTANT / T * \
                     (i - j)**2 * pop_mat[i, j] * tfsi_diff
             else:
                 pass
@@ -218,7 +231,7 @@ def compute_msd_curve(trajectory, **params):
         np.mean(np.sum((target_coords[t:] - target_coords[:-t])**2, axis=-1))
         for t in ts])
     # Convert to ns
-    ts = ts * 2e-3
+    ts = ts * DELTA_T * NANOSECOND / PICOSECOND
     return ts, msds
 
 
@@ -258,7 +271,7 @@ def compute_ngp_curve(trajectory, **params):
         (3*mfds)/(5*msds*msds)-1.])
 
     # Convert to ns
-    ts = ts * 2e-3
+    ts = ts * DELTA_T * NANOSECOND / PICOSECOND
     return ts, ngps
 
 
