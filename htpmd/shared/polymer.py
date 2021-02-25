@@ -172,6 +172,7 @@ def compute_conductivity(trajectory, **params):
     max_cluster = 10
     T = 353.0
     pop_mat = params['pop_mat']
+    z_i, z_j = 1, 1  # charges carried by cation and anions
 
     li_diff = compute_diffusivity(trajectory, target_type=RawType.LI)  # cm^2/s
     tfsi_diff = compute_diffusivity(trajectory, target_type=RawType.TFSI)  # cm^2/s
@@ -188,14 +189,14 @@ def compute_conductivity(trajectory, **params):
         for j in range(max_cluster):
             if i > j:
                 cond += FARADAY_CONSTANT**2 / V / BOLTZMANN_CONSTANT / T * \
-                    (i - j)**2 * pop_mat[i, j] * li_diff
-                tn_numerator += i * (i - j) * pop_mat[i, j] * li_diff
-                tn_denominator += (i - j)**2 * pop_mat[i, j] * li_diff
+                    (i * z_i - j * z_j)**2 * pop_mat[i, j] * li_diff
+                tn_numerator += i * z_i * (i * z_i - j * z_j) * pop_mat[i, j] * li_diff
+                tn_denominator += (i * z_i - j * z_j)**2 * pop_mat[i, j] * li_diff
             elif i < j:
                 cond += FARADAY_CONSTANT**2 / V / BOLTZMANN_CONSTANT / T * \
-                    (i - j)**2 * pop_mat[i, j] * tfsi_diff
-                tn_numerator += i * (i - j) * pop_mat[i, j] * tfsi_diff
-                tn_denominator += (i - j)**2 * pop_mat[i, j] * tfsi_diff
+                    (i * z_i - j * z_j)**2 * pop_mat[i, j] * tfsi_diff
+                tn_numerator += i * z_i * (i * z_i - j * z_j) * pop_mat[i, j] * tfsi_diff
+                tn_denominator += (i * z_i - j * z_j)**2 * pop_mat[i, j] * tfsi_diff
             else:
                 pass
             total_ion += (i + j) * pop_mat[i, j]
