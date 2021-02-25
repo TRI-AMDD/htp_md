@@ -22,7 +22,7 @@ def get_all_properties(dir_name):
     results['li_diffusivity'] = compute_diffusivity(traj, target_type=RawType.LI)
     results['tfsi_diffusivity'] = compute_diffusivity(traj, target_type=RawType.TFSI)
     results['poly_diffusivity'] = compute_polymer_diffusivity(traj)
-    results['conductivity'] = compute_conductivity(traj, pop_mat=pop_mat)
+    results['conductivity'], results['transference_number'] = compute_conductivity(traj, pop_mat=pop_mat)
     results['molarity'] = compute_molarity(traj)
     results['li_msd_curve'] = compute_msd_curve(traj, target_type=RawType.LI)
     results['tfsi_msd_curve'] = compute_msd_curve(traj, target_type=RawType.TFSI)
