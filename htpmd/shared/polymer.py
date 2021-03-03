@@ -142,8 +142,8 @@ def compute_molarity(trajectory, **params):
 def compute_conductivity(trajectory, **params):
     """
     Description:
-        Compute the conductivity using the cluster-Nernst-Einstein described
-        in the following paper (unit: S/cm).
+        Compute the conductivity and transference number using the
+        cluster-Nernst-Einstein described in the following paper.
 
         France-Lanord and Grossman. "Correlations from ion pairing and the
         Nernst-Einstein equation." Physical review letters 122.13 (2019): 136001.
@@ -162,7 +162,8 @@ def compute_conductivity(trajectory, **params):
                                                             pop_mat: np.array
 
     Returns:
-        float:                                          conductivity
+        float:                                          conductivity (unit: S/cm)
+        float:                                          transference_number
 
     """
     required_parameters = ('pop_mat', )
@@ -171,6 +172,7 @@ def compute_conductivity(trajectory, **params):
     max_cluster = 10
     T = 353.0
     pop_mat = params['pop_mat']
+    z_i, z_j = 1, 1  # charges carried by cation and anions
 
     li_diff = compute_diffusivity(trajectory, target_type=RawType.LI)  # cm^2/s
     tfsi_diff = compute_diffusivity(trajectory, target_type=RawType.TFSI)  # cm^2/s
@@ -181,20 +183,26 @@ def compute_conductivity(trajectory, **params):
 
     cond = 0.
     total_ion = 0.
+    tn_numerator, tn_denominator = 0., 0.
 
     for i in range(max_cluster):
         for j in range(max_cluster):
             if i > j:
                 cond += FARADAY_CONSTANT**2 / V / BOLTZMANN_CONSTANT / T * \
-                    (i - j)**2 * pop_mat[i, j] * li_diff
+                    (i * z_i - j * z_j)**2 * pop_mat[i, j] * li_diff
+                tn_numerator += i * z_i * (i * z_i - j * z_j) * pop_mat[i, j] * li_diff
+                tn_denominator += (i * z_i - j * z_j)**2 * pop_mat[i, j] * li_diff
             elif i < j:
                 cond += FARADAY_CONSTANT**2 / V / BOLTZMANN_CONSTANT / T * \
-                    (i - j)**2 * pop_mat[i, j] * tfsi_diff
+                    (i * z_i - j * z_j)**2 * pop_mat[i, j] * tfsi_diff
+                tn_numerator += i * z_i * (i * z_i - j * z_j) * pop_mat[i, j] * tfsi_diff
+                tn_denominator += (i * z_i - j * z_j)**2 * pop_mat[i, j] * tfsi_diff
             else:
                 pass
             total_ion += (i + j) * pop_mat[i, j]
+    tn = tn_numerator / tn_denominator
 
-    return cond  # S/cm
+    return cond, tn
 
 
 def compute_msd_curve(trajectory, **params):

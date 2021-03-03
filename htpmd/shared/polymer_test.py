@@ -37,15 +37,17 @@ def test_compute_polymer_diffusivity(dir_name, diff):
 
 
 @pytest.mark.parametrize(
-    'dir_name,cond',
+    'dir_name,cond,tn',
     [
-        ('test_data/9-0-246295613-0', 0.004507580946462734),
-        ('test_data/9-0-413610210-0', 0.005354250978187845),
+        ('test_data/9-0-246295613-0', 0.004507580946462734, 0.18290430863167545),
+        ('test_data/9-0-413610210-0', 0.005354250978187845, -0.061131167509913646),
     ])
-def test_compute_conductivity(dir_name, cond):
+def test_compute_conductivity(dir_name, cond, tn):
     trajectory = LammpsTrajectoryLoader().load(dir_name)
     pop_mat = get_population_matrix(dir_name)
-    assert approx_equal(cond, compute_conductivity(trajectory, pop_mat=pop_mat))
+    cond_result, tn_result = compute_conductivity(trajectory, pop_mat=pop_mat)
+    assert approx_equal(cond, cond_result)
+    assert approx_equal(tn, tn_result)
 
 
 @pytest.mark.parametrize(

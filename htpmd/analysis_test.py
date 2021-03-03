@@ -16,5 +16,6 @@ def test_get_all_properties(dir_name):
         'li_diffusivity', 'tfsi_diffusivity', 'poly_diffusivity',
         'conductivity', 'molarity', 'li_msd_curve', 'tfsi_msd_curve',
         'structure', 'mol_smiles', 'poly_smiles', 'force_field',
-        'material_group', 'temperature', 'time_step']
+        'material_group', 'temperature', 'time_step',
+        'transference_number']
     assert set(property_list) == set(list(results.keys()))
