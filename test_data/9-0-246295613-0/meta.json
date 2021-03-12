@@ -1,1 +1,12 @@
-{"mol_smiles": "CC(CCNCC(C)OC(=O)[Au])CCO[Cu]", "poly_smiles": "COCCC(C)CCNCC(C)OC(=O)OCCC(C)CCNCC(C)OC(=O)OCCC(C)CCNCC(C)OC(=O)OCCC(C)CCNCC(C)OC(=O)OCCC(C)CCNCC(C)OC(=O)OCCC(C)CCNCC(C)OC(=O)OCCC(C)CCNCC(C)OC(=O)OCCC(C)CCNCC(C)OC(=O)OCCC(C)CCNCC(C)OC(=O)OCCC(C)CCNCC(C)OC(=O)OCCC(C)CCNCC(C)OC(=O)OCCC(C)CCNCC(C)OC(=O)OCCC(C)CCNCC(C)OC(=O)OCCC(C)CCNCC(C)OC(C)=O", "force_field": "PCFF+", "material_group": "polymer", "temperature": 353.0, "time_step": 2.0}
+{
+    "mol_smiles": "CC(CCNCC(C)OC(=O)[Au])CCO[Cu]",
+    "poly_smiles": "COCCC(C)CCNCC(C)OC(=O)OCCC(C)CCNCC(C)OC(=O)OCCC(C)CCNCC(C)OC(=O)OCCC(C)CCNCC(C)OC(=O)OCCC(C)CCNCC(C)OC(=O)OCCC(C)CCNCC(C)OC(=O)OCCC(C)CCNCC(C)OC(=O)OCCC(C)CCNCC(C)OC(=O)OCCC(C)CCNCC(C)OC(=O)OCCC(C)CCNCC(C)OC(=O)OCCC(C)CCNCC(C)OC(=O)OCCC(C)CCNCC(C)OC(=O)OCCC(C)CCNCC(C)OC(=O)OCCC(C)CCNCC(C)OC(C)=O",
+    "force_field": "PCFF+",
+    "material_group": "polymer",
+    "temperature": 353.0,
+    "time_step": 2.0,
+    "cation_raw_type": 90,
+    "anion_raw_type": 93,
+    "polymer_raw_type_range": [0, 89],
+    "polymer_solvate_types": [7, 8, 16]
+}
