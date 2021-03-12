@@ -21,8 +21,8 @@ def approx_equal(val1, val2):
     ])
 def test_compute_diffusivity(dir_name, li_diff, tfsi_diff):
     trajectory = LammpsTrajectoryLoader().load(dir_name)
-    assert approx_equal(li_diff, compute_diffusivity(trajectory, target_type=90))
-    assert approx_equal(tfsi_diff, compute_diffusivity(trajectory, target_type=93))
+    assert approx_equal(li_diff, compute_diffusivity(trajectory, target_type=90, time_step=2.))
+    assert approx_equal(tfsi_diff, compute_diffusivity(trajectory, target_type=93, time_step=2.))
 
 
 @pytest.mark.parametrize(
@@ -33,7 +33,8 @@ def test_compute_diffusivity(dir_name, li_diff, tfsi_diff):
     ])
 def test_compute_polymer_diffusivity(dir_name, diff):
     trajectory = LammpsTrajectoryLoader().load(dir_name)
-    assert approx_equal(diff, compute_polymer_diffusivity(trajectory))
+    assert approx_equal(diff, compute_polymer_diffusivity(
+        trajectory, time_step=2., polymer_raw_type_range=[0, 89], polymer_solvate_types=[7, 8, 16]))
 
 
 @pytest.mark.parametrize(
@@ -45,7 +46,8 @@ def test_compute_polymer_diffusivity(dir_name, diff):
 def test_compute_conductivity(dir_name, cond, tn):
     trajectory = LammpsTrajectoryLoader().load(dir_name)
     pop_mat = get_population_matrix(dir_name)
-    cond_result, tn_result = compute_conductivity(trajectory, pop_mat=pop_mat)
+    cond_result, tn_result = compute_conductivity(
+        trajectory, pop_mat=pop_mat, time_step=2., temperature=353.0, cation_raw_type=90, anion_raw_type=93)
     assert approx_equal(cond, cond_result)
     assert approx_equal(tn, tn_result)
 
@@ -58,4 +60,5 @@ def test_compute_conductivity(dir_name, cond, tn):
     ])
 def test_compute_conductivity_2(dir_name, mod):
     trajectory = LammpsTrajectoryLoader().load(dir_name)
-    assert approx_equal(mod, compute_molarity(trajectory))
+    assert approx_equal(mod, compute_molarity(
+        trajectory, polymer_raw_type_range=[0, 89], cation_raw_type=90))
