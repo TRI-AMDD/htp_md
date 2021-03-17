@@ -16,7 +16,11 @@ REQUIRED_METADATA = {
     'force_field',  # Force field. E.g. 'PCFF+'
     'material_group',  # Type of materials. E.g. polymer
     'temperature',  # Temperature in K. E.g. 353
-    'time_step',  # timestep in fs. E.g. 2.
+    'time_step',  # Time step between saved trajectory frames in ps. E.g. 2.
+    'cation_raw_type',  # Raw atom type in LAMMPS used to identify cation diffusivity. E.g. 90
+    'anion_raw_type',  # Raw atom type in LAMMPS used to identfiy anion diffusivity. E.g. 93
+    'polymer_raw_type_range',  # The range of raw atom types of all polymer atoms. E.g. [0, 90]
+    'polymer_solvate_types',  # A list of atom types used to define polymer diffusivity. E.g. [7, 8, 16]
 }
 
 

@@ -15,17 +15,22 @@ def get_all_properties(dir_name):
     pop_mat = get_population_matrix(dir_name)
     metadata = get_metadata(dir_name)
 
+    # Get parameters from metadata
+    cation_raw_type = metadata['cation_raw_type']
+    anion_raw_type = metadata['anion_raw_type']
+
     # Compute properties
     results = dict()
     results.update(metadata)
     traj.remove_drift()
-    results['li_diffusivity'] = compute_diffusivity(traj, target_type=RawType.LI)
-    results['tfsi_diffusivity'] = compute_diffusivity(traj, target_type=RawType.TFSI)
-    results['poly_diffusivity'] = compute_polymer_diffusivity(traj)
-    results['conductivity'], results['transference_number'] = compute_conductivity(traj, pop_mat=pop_mat)
-    results['molarity'] = compute_molarity(traj)
-    results['li_msd_curve'] = compute_msd_curve(traj, target_type=RawType.LI)
-    results['tfsi_msd_curve'] = compute_msd_curve(traj, target_type=RawType.TFSI)
+    results['li_diffusivity'] = compute_diffusivity(traj, target_type=cation_raw_type, **metadata)
+    results['tfsi_diffusivity'] = compute_diffusivity(traj, target_type=anion_raw_type, **metadata)
+    results['poly_diffusivity'] = compute_polymer_diffusivity(traj, **metadata)
+    results['conductivity'], results['transference_number'] = compute_conductivity(
+        traj, pop_mat=pop_mat, **metadata)
+    results['molarity'] = compute_molarity(traj, **metadata)
+    results['li_msd_curve'] = compute_msd_curve(traj, target_type=cation_raw_type, **metadata)
+    results['tfsi_msd_curve'] = compute_msd_curve(traj, target_type=anion_raw_type, **metadata)
     results['structure'] = get_cif_at_frame(traj, k=0)
     return results
 

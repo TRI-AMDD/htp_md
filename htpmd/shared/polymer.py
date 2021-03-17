@@ -25,9 +25,6 @@ from htpmd.constants import ATOM_MASSES, \
     AtomType
 from pymatgen.core.structure import Structure
 
-DELTA_T = 2 * PICOSECOND
-RAW_TYPE_POLYMER_THRESHOLD = 90
-
 
 def compute_diffusivity(trajectory, **params):
     """
@@ -56,13 +53,14 @@ def compute_diffusivity(trajectory, **params):
         float:                                          diffusivity (for given target_type)
 
     """
-    required_parameters = ('target_type', )
+    required_parameters = ('target_type', 'time_step')
     check_params(required_parameters, params)
+    delta_t = params['time_step'] * PICOSECOND
 
     target_idx = np.nonzero(trajectory.raw_types == params['target_type'])[0]
     target_coords = trajectory.unwrapped_coords[:, target_idx]
     msd = np.mean(np.sum((target_coords[-1] - target_coords[0])**2, axis=-1))
-    diffusivity = msd / (len(target_coords) - 1) / 6 / DELTA_T  # A^2/s
+    diffusivity = msd / (len(target_coords) - 1) / 6 / delta_t  # A^2/s
     diffusivity = diffusivity * (ANGSTROM / CENTIMETER)**2  # cm^2/s
     return diffusivity
 
@@ -89,18 +87,19 @@ def compute_polymer_diffusivity(trajectory, **params):
         float:                                          diffusivity (for polymer)
 
     """
-    required_parameters = tuple()
+    required_parameters = ('time_step', 'polymer_raw_type_range', 'polymer_solvate_types')
     check_params(required_parameters, params)
+    delta_t = params['time_step'] * PICOSECOND
 
-    # TODO: should F be included?
-    solvate_types = (
-            (trajectory.atom_types == AtomType.NITROGEN) | (trajectory.atom_types == AtomType.OXYGEN) |
-            (trajectory.atom_types == AtomType.SULFUR))
-    poly_solvate_types = (trajectory.raw_types < RAW_TYPE_POLYMER_THRESHOLD) & solvate_types
+    solvate_types_list = [trajectory.atom_types == atom_type for atom_type in params['polymer_solvate_types']]
+    solvate_types = np.logical_or.reduce(solvate_types_list)
+    poly_types = np.logical_and(trajectory.raw_types >= params['polymer_raw_type_range'][0],
+                                trajectory.raw_types <= params['polymer_raw_type_range'][1])
+    poly_solvate_types = poly_types & solvate_types
     poly_solvate_idx = np.nonzero(poly_solvate_types)[0]
     target_coords = trajectory.unwrapped_coords[:, poly_solvate_idx]
     msd = np.mean(np.sum((target_coords[-1] - target_coords[0])**2, axis=-1))
-    diffusivity = msd / (len(target_coords) - 1) / 6 / DELTA_T  # A^2/s
+    diffusivity = msd / (len(target_coords) - 1) / 6 / delta_t  # A^2/s
     diffusivity = diffusivity * (ANGSTROM / CENTIMETER)**2  # cm^2/s
     return diffusivity
 
@@ -126,11 +125,13 @@ def compute_molarity(trajectory, **params):
         float:                                          molarity
 
     """
-    required_parameters = tuple()
+    required_parameters = ('polymer_raw_type_range', 'cation_raw_type')
     check_params(required_parameters, params)
 
-    poly_idx = np.nonzero(trajectory.raw_types < RAW_TYPE_POLYMER_THRESHOLD)[0]
-    li_idx = np.nonzero(trajectory.atom_types == AtomType.LITHIUM)[0]
+    poly_types = np.logical_and(trajectory.raw_types >= params['polymer_raw_type_range'][0],
+                                trajectory.raw_types <= params['polymer_raw_type_range'][1])
+    poly_idx = np.nonzero(poly_types)[0]
+    li_idx = np.nonzero(trajectory.raw_types == params['cation_raw_type'])[0]
 
     atom_masses = np.array(ATOM_MASSES)
 
@@ -166,16 +167,16 @@ def compute_conductivity(trajectory, **params):
         float:                                          transference_number
 
     """
-    required_parameters = ('pop_mat', )
+    required_parameters = ('pop_mat', 'time_step', 'temperature', 'cation_raw_type', 'anion_raw_type')
     check_params(required_parameters, params)
 
     max_cluster = 10
-    T = 353.0
+    T = params['temperature']
     pop_mat = params['pop_mat']
     z_i, z_j = 1, 1  # charges carried by cation and anions
 
-    li_diff = compute_diffusivity(trajectory, target_type=RawType.LI)  # cm^2/s
-    tfsi_diff = compute_diffusivity(trajectory, target_type=RawType.TFSI)  # cm^2/s
+    li_diff = compute_diffusivity(trajectory, target_type=params['cation_raw_type'], **params)  # cm^2/s
+    tfsi_diff = compute_diffusivity(trajectory, target_type=params['anion_raw_type'], **params)  # cm^2/s
 
     assert np.isclose(trajectory.lattices[0:1], trajectory.lattices).all()
 
@@ -228,8 +229,9 @@ def compute_msd_curve(trajectory, **params):
         msds:                                            mean squared displacement (np.array)
     """
 
-    required_parameters = ('target_type', )
+    required_parameters = ('target_type', 'time_step')
     check_params(required_parameters, params)
+    delta_t = params['time_step'] * PICOSECOND
 
     target_idx = np.nonzero(trajectory.raw_types == params['target_type'])[0]
     target_coords = trajectory.unwrapped_coords[:, target_idx]
@@ -239,7 +241,7 @@ def compute_msd_curve(trajectory, **params):
         np.mean(np.sum((target_coords[t:] - target_coords[:-t])**2, axis=-1))
         for t in ts])
     # Convert to ns
-    ts = ts * DELTA_T * NANOSECOND / PICOSECOND
+    ts = ts * delta_t * NANOSECOND / PICOSECOND
     return ts, msds
 
 
@@ -262,8 +264,9 @@ def compute_ngp_curve(trajectory, **params):
         ngps:                                            non-Gaussian parameter (np.array)
     """
 
-    required_parameters = ('target_type', )
+    required_parameters = ('target_type', 'time_step')
     check_params(required_parameters, params)
+    delta_t = params['time_step'] * PICOSECOND
 
     target_idx = np.nonzero(trajectory.raw_types == params['target_type'])[0]
     target_coords = trajectory.unwrapped_coords[:, target_idx]
@@ -279,7 +282,7 @@ def compute_ngp_curve(trajectory, **params):
         (3*mfds)/(5*msds*msds)-1.])
 
     # Convert to ns
-    ts = ts * DELTA_T * NANOSECOND / PICOSECOND
+    ts = ts * delta_t * NANOSECOND / PICOSECOND
     return ts, ngps
 
 
