@@ -42,9 +42,14 @@ class LammpsTrajectoryLoader(TrajectoryLoader):
 
 
 def get_metadata(dir_name):
-    with open(os.path.join(dir_name, 'meta.json')) as f:
+    metadata_path = os.path.join(dir_name, 'meta.json')
+    with open(metadata_path) as f:
         metadata = json.load(f)
-    assert set(metadata.keys()).issuperset(REQUIRED_METADATA)
+    if not set(metadata.keys()).issuperset(REQUIRED_METADATA):
+        fields_missing = [x for x in REQUIRED_METADATA if x not in metadata.keys()]
+        fields_missing_str = ','.join(fields_missing)
+        error_message = f'The following fields are missing in metadata file {metadata_path} : {fields_missing_str}'
+        raise ValueError(error_message)
     return metadata
 
 
