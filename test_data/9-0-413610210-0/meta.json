@@ -8,5 +8,7 @@
     "cation_raw_type": 90,
     "anion_raw_type": 93,
     "polymer_raw_type_range": [0, 89],
-    "polymer_solvate_types": [7, 8, 16]
+    "polymer_solvate_types": [7, 8, 16],
+    "salt_cation": "Li",
+    "salt_anion": "TFSI"
 }

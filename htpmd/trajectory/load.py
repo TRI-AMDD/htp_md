@@ -21,6 +21,8 @@ REQUIRED_METADATA = {
     'anion_raw_type',  # Raw atom type in LAMMPS used to identfiy anion diffusivity. E.g. 93
     'polymer_raw_type_range',  # The range of raw atom types of all polymer atoms. E.g. [0, 90]
     'polymer_solvate_types',  # A list of atom types used to define polymer diffusivity. E.g. [7, 8, 16]
+    'salt_cation',
+    'salt_anion',
 }
 
 
