@@ -104,10 +104,10 @@ def compute_polymer_diffusivity(trajectory, **params):
     return diffusivity
 
 
-def compute_molarity(trajectory, **params):
+def compute_molality(trajectory, **params):
     """
     Description:
-        Molarity of the polymer/salt mixture (unit: mol Li / kg polymer).
+        Molality of the polymer/salt mixture (unit: mol Li / kg polymer).
 
     Version: 1.0.0
 
@@ -122,7 +122,7 @@ def compute_molarity(trajectory, **params):
                                                         Required fields:
 
     Returns:
-        float:                                          molarity
+        float:                                          molality
 
     """
     required_parameters = ('polymer_raw_type_range', 'cation_raw_type')

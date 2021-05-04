@@ -5,7 +5,7 @@ from htpmd.constants import RawType
 from htpmd.trajectory.load import (
     LammpsTrajectoryLoader, get_metadata, get_population_matrix)
 from htpmd.shared.polymer import (
-    compute_diffusivity, compute_polymer_diffusivity, compute_molarity,
+    compute_diffusivity, compute_polymer_diffusivity, compute_molality,
     compute_conductivity, compute_msd_curve, get_cif_at_frame)
 
 
@@ -28,7 +28,7 @@ def get_all_properties(dir_name):
     results['poly_diffusivity'] = compute_polymer_diffusivity(traj, **metadata)
     results['conductivity'], results['transference_number'] = compute_conductivity(
         traj, pop_mat=pop_mat, **metadata)
-    results['molarity'] = compute_molarity(traj, **metadata)
+    results['molality'] = compute_molality(traj, **metadata)
     results['li_msd_curve'] = compute_msd_curve(traj, target_type=cation_raw_type, **metadata)
     results['tfsi_msd_curve'] = compute_msd_curve(traj, target_type=anion_raw_type, **metadata)
     results['structure'] = get_cif_at_frame(traj, k=0)

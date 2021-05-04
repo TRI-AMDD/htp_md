@@ -5,7 +5,7 @@ import pytest
 import numpy as np
 from htpmd.shared.polymer import (
     compute_diffusivity, compute_polymer_diffusivity, compute_conductivity,
-    compute_molarity)
+    compute_molality)
 from htpmd.trajectory.load import (LammpsTrajectoryLoader, get_population_matrix)
 
 
@@ -60,5 +60,5 @@ def test_compute_conductivity(dir_name, cond, tn):
     ])
 def test_compute_conductivity_2(dir_name, mod):
     trajectory = LammpsTrajectoryLoader().load(dir_name)
-    assert approx_equal(mod, compute_molarity(
+    assert approx_equal(mod, compute_molality(
         trajectory, polymer_raw_type_range=[0, 89], cation_raw_type=90))
