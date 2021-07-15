@@ -50,7 +50,7 @@ When contributing a new function, please follow the [template](https://github.co
 * Test data and expected outcome
 
 ### Contributing a new trajectory
-Contact Toyota Research Institute with your name, affiliation, and a description of your data. 
+Contact the HTP team at Toyota Research Institute (materials-support@tri.global) with your name, affiliation, and a description of your data. 
 
 ## Version History
 * 0.1.5
