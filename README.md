@@ -23,6 +23,22 @@ TODO
 cd htp_md
 pip install .
 ```
+
+### Test Data 
+Test data are found in `./test_data/`. 
+
+## Using the functions
+To get a dictionary of all results:
+
+```python
+import htpmd
+results = htpmd.analyze('test_data/9-0-246295613-0')
+```
+This returns a dictionary of results. To see subfields of results
+`results.keys()`
+
+TODO: A tutorial that walks through installation of repo, download a test trajectory, use analyze_all to extract properties, use ML to make a prediction, and visualize. 
+
 ### Testing
 To run unit tests, run:
 `python -m pytest` 
@@ -30,9 +46,6 @@ To run unit tests, run:
 ## Using htp_md
 To run analysis functions, run:
 `python main.py <action> [-d <dir_path>]`
-
-### Tutorial
-TODO: A tutorial (doc or jupyter notebook) that walks through installation of repo, download a test trajectory, use analyze_all to extract properties, use ML to make a prediction, and visualize. 
 
 ## How to contribute
 User contributions for new analysis functions and data are greatly appreciated. 
