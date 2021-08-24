@@ -40,5 +40,6 @@ def random_forests_prediction(smiles, prop, form_ring=1, has_H=0):
     return output
 
 
-output = random_forests_prediction(["CCN(CCCC(C)O[Cu])CCOC(=O)[Au]","CC(C)C(O[Cu])C(=O)N(C)CCCOC(=O)[Au]"], "conductivity")
+output = random_forests_prediction(["CCN(CCCC(C)O[Cu])CCOC(=O)[Au]"], "conductivity")[0]
 print (output)
+-- INSERT --          
