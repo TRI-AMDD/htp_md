@@ -1,4 +1,3 @@
-import json
 import os
 from rdkit import Chem
 from rdkit.Chem import AllChem
@@ -22,20 +21,24 @@ def process_smiles(smiles, form_ring, has_H):
     Chem.SanitizeMol(mol)
     return mol
 
-def random_forests_prediction(smiles, prop, form_ring=True, has_H=True):
+def random_forests_prediction(smiles, prop, form_ring=1, has_H=0):
     # The function to predict transport properties based on pre-trained random forest models. 
-    # Input: smiles: the smile structure of the monomer; 
+    # Input: smiles: the list of smile structures of the monomer; 
     # prop: the property to predict, including "conductivity", "li_diff", "tfsi_diff", "poly_diff" and "transference"
     # form_ring: whether form a ring structure based on the monomer; has_H: whether the ring structure contain H or not
-    smiles = process_smiles(smiles, form_ring, has_H) #pre-process smiles structure
     calc = Calculator(descriptors, ignore_3D=True) #initialize descriptors calculator
-#    features=calc(Chem.MolFromSmiles(smiles))
-    benzene = Chem.MolFromSmiles("c1ccccc1")
-    features = calc(benzene)
-    print (features)
+    mols = []
+    for smile in smiles:
+        smile = process_smiles(smile, form_ring, has_H)#pre-process simile structures
+        mols.append(smile)
+    df = calc.pandas(mols)
+    df = df.apply(pd.to_numeric, errors='coerce')#force all molecules have same dimension of features
+    df = df.select_dtypes(include=['int','float32','float64'])
+    df = df.fillna(0)
     rf = pickle.load(open('pre-trained-models-random-forests/rf_%s.sav'%(prop), 'rb'))
-    output = rf.predict(features)
+    output = rf.predict(df)
     return output
 
 
-random_forests_prediction("O=C([Au])OCCOCCNCCOCCO[Cu]", "conductivity")
+output = random_forests_prediction(["CCN(CCCC(C)O[Cu])CCOC(=O)[Au]","CC(C)C(O[Cu])C(=O)N(C)CCCOC(=O)[Au]"], "conductivity")
+print (output)
