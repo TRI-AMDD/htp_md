@@ -26,6 +26,7 @@ jobs:
 
       - name: Install dependencies
         run: |
+          $CONDA/bin/conda env update --file env.yml --name base
           python -m pip install --upgrade pip
           pip install -e .[tests]
 
