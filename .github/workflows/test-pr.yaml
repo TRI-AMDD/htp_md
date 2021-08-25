@@ -27,6 +27,7 @@ jobs:
           environment-file: env.yml
       - shell: bash -l {0}
         run: |
+          conda install mkl=2018
           conda info
           conda list
       - name: Set up Python ${{ matrix.python-version }}
