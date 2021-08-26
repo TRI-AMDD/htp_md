@@ -4,3 +4,4 @@ mdtraj>=1.9.4
 scipy>=1.5.0
 pymatgen
 torch
+torch-geometric
