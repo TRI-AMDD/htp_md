@@ -14,3 +14,4 @@ from htpmd.ml_models import gnn
     ])
 def test_gnn(prop):
     preds = gnn.predict(['CC(CCNCC(C)OC(=O)[Au])CCO[Cu]'], prop)
+    assert preds is not None

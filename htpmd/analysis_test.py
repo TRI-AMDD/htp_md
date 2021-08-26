@@ -12,3 +12,4 @@ from htpmd.analysis import get_all_properties
     ])
 def test_get_all_properties(dir_name):
     results = get_all_properties(dir_name)
+    assert results is not None
