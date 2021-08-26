@@ -45,7 +45,7 @@ jobs:
         shell: bash -l {0}
         run: |
           conda install pytest
-          pytest htpmd --color=yes --cov=htpmd --cov-config=.coveragerc --cov-report html:coverage_reports
+          pytest --color=yes --cov=htpmd --cov-config=.coveragerc --cov-report html:coverage_reports htpmd
 
       - name: Coveralls
         env:
