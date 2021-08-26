@@ -3,7 +3,7 @@ name: Test Master - Windows
 on:
   push:
     branches:
-      # - master
+      - master
 
 jobs:
   test:
