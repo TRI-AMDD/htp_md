@@ -1,6 +1,7 @@
 import pytest
 from htpmd.ml_models import gnn
 
+
 @pytest.mark.parametrize(
     'prop',
     [
