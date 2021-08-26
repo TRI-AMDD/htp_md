@@ -5,3 +5,8 @@ scipy>=1.5.0
 pymatgen
 torch
 torch-geometric
+torch-cluster
+torch-scatter
+torch-sparse
+torch-spline-conv
+

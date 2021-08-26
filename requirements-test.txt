@@ -7,3 +7,7 @@ pycodestyle==2.6.0
 coveralls==2.1.2
 torch
 torch-geometric
+torch-cluster
+torch-scatter
+torch-sparse
+torch-spline-conv
