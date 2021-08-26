@@ -25,7 +25,7 @@ setup(
     long_description_content_type='text/markdown',
     url='',
     packages=find_packages(),
-    python_requires='>=3.7',
+    python_requires='>=3.6',
     install_requires=reqs,
     extras_require={"tests": reqs_test},
     entry_points={
