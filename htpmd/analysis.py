@@ -7,6 +7,17 @@ from htpmd.trajectory.load import (
 from htpmd.shared.polymer import (
     compute_diffusivity, compute_polymer_diffusivity, compute_molality,
     compute_conductivity, compute_msd_curve, get_cif_at_frame)
+from htpmd.ml_models import gnn
+
+
+ML_PROPERTIES = [
+    'conductivity',
+    'li_diffusivity',
+    'poly_diffusivity',
+    'tfsi_diffusivity',
+    'molarity',
+    'transference_number',
+]
 
 
 def get_all_properties(dir_name):
@@ -32,6 +43,12 @@ def get_all_properties(dir_name):
     results['li_msd_curve'] = compute_msd_curve(traj, target_type=cation_raw_type, **metadata)
     results['tfsi_msd_curve'] = compute_msd_curve(traj, target_type=anion_raw_type, **metadata)
     results['structure'] = get_cif_at_frame(traj, k=0)
+
+    # Get GNN predicted properties
+    for prop in ML_PROPERTIES:
+        gnn_pred = gnn.predict([metadata['mol_smiles']], prop)[0]
+        results[f'gnn_{prop}'] = gnn_pred
+
     return results
 
 
