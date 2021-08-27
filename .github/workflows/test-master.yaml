@@ -8,16 +8,32 @@ on:
 jobs:
   test:
     strategy:
+      fail-fast: false
       max-parallel: 20
       matrix:
         os: [ubuntu-latest, macos-latest]
-        python-version: [3.7]
+        python-version: [3.6]
 
     runs-on: ${{ matrix.os }}
 
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+
+      - name: Set up Conda
+        uses: conda-incubator/setup-miniconda@v2
+        with:
+          activate-environment: htpmd
+          environment-file: env.yml
+          python-version: 3.6
+          auto-activate-base: true
+
+      - shell: bash -l {0}
+        run: |
+          conda install mkl=2018
+          conda install pytorch-geometric -c rusty1s -c conda-forge
+          conda info
+          conda list  
 
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v2
@@ -31,7 +47,8 @@ jobs:
 
       - name: pytest
         run: |
-          pytest htpmd --color=yes --cov=htpmd --cov-config=.coveragerc --cov-report html:coverage_reports
+          conda install pytest
+          pytest --color=yes --cov=htpmd --cov-config=.coveragerc --cov-report html:coverage_reports htpmd
 
       - name: Coveralls
         env:
