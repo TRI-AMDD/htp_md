@@ -19,13 +19,13 @@ with open(readme_path, "r") as f:
 
 setup(
     name='htpmd',
-    version='0.1.5',
+    version='0.1.6',
     description='A library to analyze trajectory data from Molecular Dynamics Simulations',
     long_description=long_description,
     long_description_content_type='text/markdown',
     url='',
     packages=find_packages(),
-    python_requires='>=3.7',
+    python_requires='>=3.6',
     install_requires=reqs,
     extras_require={"tests": reqs_test},
     entry_points={
