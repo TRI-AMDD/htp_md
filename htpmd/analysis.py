@@ -2,13 +2,12 @@ import os
 import numpy as np
 from .utils import load_lammps
 from htpmd.constants import RawType
-from htpmd.machine_learning import random_forest
 from htpmd.trajectory.load import (
     LammpsTrajectoryLoader, get_metadata, get_population_matrix)
 from htpmd.shared.polymer import (
     compute_diffusivity, compute_polymer_diffusivity, compute_molality,
     compute_conductivity, compute_msd_curve, get_cif_at_frame)
-from htpmd.ml_models import gnn
+from htpmd.ml_models import gnn, random_forest
 
 
 ML_PROPERTIES = [
@@ -51,9 +50,11 @@ def get_all_properties(dir_name):
         results[f'gnn_{prop}'] = gnn_pred
     # Get RF predicted properties
     for prop in ML_PROPERTIES:
+        if prop == 'molarity':
+            continue
         rf_pred = random_forest.random_forests_prediction([metadata['mol_smiles']], prop)[0]
         results[f'rf_{prop}'] = rf_pred
-        
+
     return results
 
 
