@@ -35,7 +35,9 @@ def get_all_properties(dir_name):
     
     for prop in ML_PROPERTIES:
         gnn_pred = gnn.predict([metadata['mol_smiles']], prop)[0]
+        rf_pred = random_forests_prediction([metadata['mol_smiles']], prop)[0]
         results[f'gnn_{prop}'] = gnn_pred
+        results[f'rf_{prop}'] = rf_pred
         
         
     return results
