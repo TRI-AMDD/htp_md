@@ -35,7 +35,7 @@ def random_forests_prediction(smiles, prop, form_ring=1, has_H=0):
     df = df.apply(pd.to_numeric, errors='coerce')#force all molecules have same dimension of features
     df = df.select_dtypes(include=['int','float32','float64'])
     df = df.fillna(0)
-    rf = pickle.load(open('pre-trained-models-random-forests/rf_%s.sav'%(prop), 'rb'))
+    rf = pickle.load(open('htp_md/htpmd/machine_learning/pre-trained-models-random-forests/rf_%s.sav'%(prop), 'rb'))
     output = rf.predict(df)
     return output
 
