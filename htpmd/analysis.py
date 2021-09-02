@@ -2,6 +2,7 @@ import os
 import numpy as np
 from .utils import load_lammps
 from htpmd.constants import RawType
+from htpmd.machine_learning import random_forest
 from htpmd.trajectory.load import (
     LammpsTrajectoryLoader, get_metadata, get_population_matrix)
 from htpmd.shared.polymer import (
