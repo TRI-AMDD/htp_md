@@ -3,10 +3,7 @@ from rdkit import Chem
 from rdkit.Chem import AllChem
 from mordred import Calculator, descriptors
 import pandas as pd
-import numpy as np
-from math import *
 import pickle
-from sklearn.ensemble import RandomForestRegressor
 
 
 def process_smiles(smiles, form_ring, has_H):
