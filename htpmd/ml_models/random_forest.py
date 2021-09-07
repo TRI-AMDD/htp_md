@@ -37,8 +37,7 @@ def random_forests_prediction(smiles, prop, form_ring=1, has_H=0):
     cur_path = os.path.dirname(__file__)
     rf_path = os.path.join(cur_path, f'pre_trained_rfs/rf_{prop}.sav')
     rf = pickle.load(open(rf_path, 'rb'))
-    # output = rf.predict(df)
-    output = 1
+    output = rf.predict(df)
     return output
 
 
