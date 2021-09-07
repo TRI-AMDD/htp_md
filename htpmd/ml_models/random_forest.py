@@ -29,7 +29,7 @@ def random_forests_prediction(smiles, prop, form_ring=1, has_H=0):
     mols = []
     for smile in smiles:
         smile = process_smiles(smile, form_ring, has_H)  # pre-process simile structures
-        mols.append(smile)
+        mols += [smile]
     df = calc.pandas(mols)
     df = df.apply(pd.to_numeric, errors='coerce')  # force all molecules have same dimension of features
     df = df.select_dtypes(include=['int', 'float32', 'float64'])
