@@ -8,12 +8,14 @@ on:
 jobs:
   test:
     strategy:
+      fail-fast: false
       max-parallel: 20
       matrix:
         os: [windows-latest]
         python-version: [3.6]
 
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
 
     steps:
       - name: Checkout
