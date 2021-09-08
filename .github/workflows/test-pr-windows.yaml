@@ -46,10 +46,12 @@ jobs:
         run: |
           conda config --append channels conda-forge
           conda install --file=requirements.txt --file=requirements-test.txt
+          pip install -e .[tests]
 
       - name: pytest
         shell: pwsh
         run: |
+          conda install pytest
           pytest htpmd --color=yes --cov=htpmd --cov-config=.coveragerc --cov-report html:coverage_reports
 
       - name: Coveralls
