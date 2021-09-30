@@ -32,7 +32,7 @@ def random_forests_prediction(smiles, prop, form_ring=1, has_H=0):
         mols.append(smile)
     df = calc.pandas(mols)
     df = df.apply(pd.to_numeric, errors='coerce')  # force all molecules have same dimension of features
-    df = df.select_dtypes(include=['int', 'float32', 'float64'])
+    df = df.select_dtypes(include=['int', 'int64' 'float32', 'float64'])
     df = df.fillna(0)
     cur_path = os.path.dirname(__file__)
     rf_path = os.path.join(cur_path, f'pre_trained_rfs/rf_{prop}.sav')
