@@ -244,6 +244,7 @@ def compute_msd_curve(trajectory, **params):
     ts = ts * delta_t * NANOSECOND / PICOSECOND
     return ts, msds
 
+
 def compute_non_avg_msd_curve(trajectory, **params):
     """
     Description:
@@ -281,6 +282,7 @@ def compute_non_avg_msd_curve(trajectory, **params):
     # Convert to ns
     ts = ts * delta_t * NANOSECOND / PICOSECOND
     return ts, msds
+
 
 def compute_ngp_curve(trajectory, **params):
     """
