@@ -244,6 +244,43 @@ def compute_msd_curve(trajectory, **params):
     ts = ts * delta_t * NANOSECOND / PICOSECOND
     return ts, msds
 
+def compute_non_avg_msd_curve(trajectory, **params):
+    """
+    Description:
+        Computes Mean Squared Displacement curve (unit: ns, A^2) without time averaging
+
+    Version: 1.0.0
+
+    Author:
+        Name:                                           Arash Khajeh
+        Affiliation:                                    TRI
+        Email:                                          <optional>
+
+    Args:
+        trajectory (trajectory.base.Trajectory):        trajectory to compute metric on
+        **params:                                       Methodology specific parameters.
+                                                        Required fields:
+                                                            target_type (int)
+
+    Returns:
+        ts:                                              time series (np.array)
+        msds:                                            mean squared displacement (np.array)
+    """
+
+    required_parameters = ('target_type', 'time_step')
+    check_params(required_parameters, params)
+    delta_t = params['time_step'] * PICOSECOND
+
+    target_idx = np.nonzero(trajectory.raw_types == params['target_type'])[0]
+    target_coords = trajectory.unwrapped_coords[:, target_idx]
+
+    ts = np.linspace(1, target_coords.shape[0] - 1, target_coords.shape[0] - 1, dtype=int)
+    msds = np.array([
+        np.mean(np.sum((target_coords[t] - target_coords[0])**2, axis=-1))
+        for t in ts])
+    # Convert to ns
+    ts = ts * delta_t * NANOSECOND / PICOSECOND
+    return ts, msds
 
 def compute_ngp_curve(trajectory, **params):
     """
