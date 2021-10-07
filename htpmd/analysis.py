@@ -44,16 +44,18 @@ def get_all_properties(dir_name):
     results['tfsi_msd_curve'] = compute_msd_curve(traj, target_type=anion_raw_type, **metadata)
     results['structure'] = get_cif_at_frame(traj, k=0)
 
-    # Get GNN predicted properties
-    for prop in ML_PROPERTIES:
-        gnn_pred = gnn.predict([metadata['mol_smiles']], prop)[0]
-        results[f'gnn_{prop}'] = gnn_pred
-    # Get RF predicted properties
-    for prop in ML_PROPERTIES:
-        if prop == 'molarity':
-            continue
-        rf_pred = random_forest.random_forests_prediction([metadata['mol_smiles']], prop)[0]
-        results[f'rf_{prop}'] = rf_pred
+    # Only predict properties for polymers
+    if metadata['material_group'] == 'polymer':
+        # Get GNN predicted properties
+        for prop in ML_PROPERTIES:
+            gnn_pred = gnn.predict([metadata['mol_smiles']], prop)[0]
+            results[f'gnn_{prop}'] = gnn_pred
+        # Get RF predicted properties
+        for prop in ML_PROPERTIES:
+            if prop == 'molarity':
+                continue
+            rf_pred = random_forest.random_forests_prediction([metadata['mol_smiles']], prop)[0]
+            results[f'rf_{prop}'] = rf_pred
 
     return results
 
