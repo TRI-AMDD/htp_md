@@ -6,7 +6,8 @@ from htpmd.trajectory.load import (
     LammpsTrajectoryLoader, get_metadata, get_population_matrix)
 from htpmd.shared.polymer import (
     compute_diffusivity, compute_polymer_diffusivity, compute_molality,
-    compute_conductivity, compute_msd_curve, compute_non_avg_msd_curve, get_cif_at_frame)
+    compute_conductivity, compute_msd_curve, compute_non_avg_msd_curve, get_cif_at_frame,
+    compute_displacement)
 from htpmd.ml_models import gnn, random_forest
 
 
@@ -45,6 +46,10 @@ def get_all_properties(dir_name):
     results['li_msd_curve_non_avg'] = compute_non_avg_msd_curve(traj, target_type=cation_raw_type, **metadata)
     results['tfsi_msd_curve_non_avg'] = compute_non_avg_msd_curve(traj, target_type=anion_raw_type, **metadata)
     results['structure'] = get_cif_at_frame(traj, k=0)
+    results['li_mean_disp'] = compute_displacement(traj, target_type=cation_raw_type, type='mean')
+    results['li_max_disp'] = compute_displacement(traj, target_type=cation_raw_type, type='max')
+    results['tfsi_mean_disp'] = compute_displacement(traj, target_type=anion_raw_type, type='mean')
+    results['tfsi_max_disp'] = compute_displacement(traj, target_type=anion_raw_type, type='max')
 
     # Only predict properties for polymers
     if metadata['material_group'] == 'polymer':
