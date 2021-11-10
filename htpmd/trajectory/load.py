@@ -4,6 +4,7 @@ Module for trajectory loaders.
 from abc import ABC
 from abc import abstractmethod
 import os
+import glob
 import json
 import numpy as np
 
@@ -36,7 +37,8 @@ class TrajectoryLoader(ABC):
 class LammpsTrajectoryLoader(TrajectoryLoader):
 
     def load(self, trajectory_path):
-        file_name = os.path.join(trajectory_path, 'traj.lammpstrj')
+        traj_file = glob.glob(trajectory_path+'/'+'*.lammpstrj')
+        file_name = traj_file[0]
         trajectory = ExtendedLAMMPSTrajectoryFile(file_name)
         trajectory.read()
         trajectory.determine_lattice_and_coords()
