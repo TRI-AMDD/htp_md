@@ -5,16 +5,9 @@ scipy>=1.5.0
 pymatgen
 rdkit-pypi==2021.9.3
 jupyterlab
-python=3.6.*
-tqdm @ file:///home/conda/feedstock_root/build_artifacts/tqdm_1632160078689/work
-torch==1.8.1
-torch-cluster @ file:///usr/local/miniconda/envs/test/conda-bld/pytorch-cluster_1631019506272/work
-torch-geometric @ file:///usr/local/miniconda/envs/test/conda-bld/pyg_1631775013783/work
-torch-scatter @ file:///usr/local/miniconda/envs/test/conda-bld/pytorch-scatter_1631015153358/work
-torch-sparse @ file:///usr/local/miniconda/envs/test/conda-bld/pytorch-sparse_1631173063121/work
-torch-spline-conv @ file:///usr/local/miniconda/envs/test/conda-bld/pytorch-spline-conv_1631007436516/work
+tqdm
 pytest
 pytest-cov
 mordred==1.2.0
-scikit-learn=0.23.*
+scikit-learn==0.23.*
 docopt
