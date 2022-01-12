@@ -10,3 +10,11 @@ pytest
 pytest-cov
 mordred==1.2.0
 scikit-learn==0.23.*
+<<<<<<< HEAD
+=======
+docopt
+torch
+torch-scatter
+torch-sparse
+torch-geometric
+>>>>>>> 978a692 (remove conda imports)
