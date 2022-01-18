@@ -406,7 +406,7 @@ def compute_simulation_length(trajectory, **params):
         Compute the total length of simulation in ns
 
         Example:
-        `li_mean_disp = compute_displacement(trajectory, **{'target_type': 90, 'type': 'mean'})`
+        `simulation_length = compute_displacement(trajectory, **{'time_step': 2.0})`
 
     Version: 1.0.0
 
