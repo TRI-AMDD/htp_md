@@ -1,0 +1,14 @@
+{
+    "mol_smiles": "O",
+    "poly_smiles": "O",
+    "force_field": "SPCE-JC",
+    "material_group": "water",
+    "temperature": 350.0,
+    "time_step": 10.0,
+    "cation_raw_type": 90,
+    "anion_raw_type": 91,
+    "polymer_raw_type_range": [0, 89],
+    "polymer_solvate_types": [1,2],
+    "salt_cation": "Na",
+    "salt_anion": "Cl"
+}
