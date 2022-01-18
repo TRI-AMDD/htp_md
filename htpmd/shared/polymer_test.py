@@ -5,7 +5,7 @@ import pytest
 import numpy as np
 from htpmd.shared.polymer import (
     compute_diffusivity, compute_polymer_diffusivity, compute_conductivity,
-    compute_molality, compute_displacement)
+    compute_molality, compute_displacement, compute_simulation_length)
 from htpmd.trajectory.load import (LammpsTrajectoryLoader, get_population_matrix)
 
 
@@ -76,3 +76,15 @@ def test_compute_displacement(dir_name, type):
     trajectory = LammpsTrajectoryLoader().load(dir_name)
     assert compute_displacement(trajectory, target_type=90, type=type) > 0.
     assert compute_displacement(trajectory, target_type=93, type=type) > 0.
+
+
+@pytest.mark.parametrize(
+    'dir_name,total_length',
+    [
+        ('test_data/9-0-246295613-0', 0.012),
+        ('test_data/9-0-413610210-0', 0.014),
+    ])
+def test_compute_simulation_length(dir_name, total_length):
+    trajectory = LammpsTrajectoryLoader().load(dir_name)
+    assert approx_equal(compute_simulation_length(trajectory, time_step=2.0), total_length)
+    assert approx_equal(compute_simulation_length(trajectory, time_step=2.0), total_length)
