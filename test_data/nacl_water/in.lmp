@@ -1,0 +1,75 @@
+# NaCl in water, nVT
+
+units 			real
+boundary 		p p p
+
+atom_style 		full
+bond_style 		harmonic
+angle_style 	harmonic
+dihedral_style 	opls
+
+special_bonds 	lj/coul 0.0 0.0 0.5
+
+pair_style 		lj/cut/coul/long 10.0
+pair_modify 	mix arithmetic tail yes
+
+kspace_style 	pppm 1.0e-5
+
+read_restart 	../eq_2_nvt/350K.restart
+
+variable		time		equal step*dt+0.000001
+variable		cella		equal lx
+variable		etotal		equal etotal
+variable		pe			equal pe
+variable		ke			equal ke
+
+pair_coeff 		1    1  0.000000     0.000000  # Hw Hw
+pair_coeff 		2    2  0.155425     3.165500  # Ow Ow
+pair_coeff 		90   90 0.352642     2.160000  # Na Na
+pair_coeff 		91   91 0.012785     4.830000  # Cl Cl
+pair_coeff 		3*89 3*89  0.0          1.0
+
+neighbor 		2.0 bin
+neigh_modify 	delay 0 every 1 check yes
+
+timestep 		1.0
+
+reset_timestep 	0
+
+# Groups
+
+group 			solvent type 1 2
+
+fix 			rigid solvent shake 0.0001 20 0 b 1 a 1
+
+thermo_style	custom step v_time press temp pe ke etotal
+thermo 			10000
+fix				1 all nvt temp 350.0 350.0 100.0 
+fix				2 all ave/time 500      1      500 v_time c_thermo_temp c_thermo_press &
+							 v_pe v_ke v_etotal &
+							 file nVT_instantaneous.txt off 1
+fix				3 all ave/time 1    49999    50000 v_time c_thermo_temp c_thermo_press &
+							 v_pe v_ke v_etotal &
+							 file nVT_averages.txt off 1
+
+dump            1 all custom 10000 traj.lammpstrj id mol type mass q x y z ix iy iz
+dump_modify     1 sort id
+
+run 			2000000
+
+unfix 			1
+unfix 			2
+unfix 			3
+
+undump 			1
+
+# Compute clusters
+
+group 			ions type 90 91
+
+compute         cc2 ions aggregate/atom 3.48
+
+dump            aggregates  ions custom 10000 aggregates.txt id type c_cc2 mol
+dump_modify     aggregates  sort id
+
+rerun           traj.lammpstrj dump x y z ix iy iz
