@@ -19,7 +19,7 @@ with open(readme_path, "r") as f:
 
 setup(
     name='htpmd',
-    version='0.2.0',
+    version='0.2.1',
     description='A library to analyze trajectory data from Molecular Dynamics Simulations',
     long_description=long_description,
     long_description_content_type='text/markdown',
