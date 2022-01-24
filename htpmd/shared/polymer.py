@@ -398,36 +398,3 @@ def compute_displacement(trajectory, **params):
     else:
         raise NotImplementedError
     return disp
-
-
-def compute_simulation_length(trajectory, **params):
-    """
-    Description:
-        Compute the total length of simulation in ns
-
-        Example:
-        `simulation_length = compute_displacement(trajectory, **{'time_step': 2.0})`
-
-    Version: 1.0.0
-
-    Author:
-        Name:                                           Tian Xie
-        Affiliation:                                    MIT
-        Email:                                          <optional>
-
-    Args:
-        trajectory (trajectory.base.Trajectory):        trajectory to compute metric on
-        **params:                                       Methodology specific parameters.
-                                                        Required fields:
-
-    Returns:
-        float:                                          total simulation length in ns
-
-    """
-    required_parameters = ('time_step',)
-    check_params(required_parameters, params)
-    delta_t = params['time_step'] * PICOSECOND
-
-    total_t = (trajectory.unwrapped_coords.shape[0] - 1) * delta_t
-
-    return total_t / NANOSECOND
