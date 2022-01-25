@@ -23,17 +23,17 @@ jobs:
       - name: Set up Conda
         uses: conda-incubator/setup-miniconda@v2
         with:
-          activate-environment: htpmd
-          environment-file: env.yml
           python-version: 3.6
           auto-activate-base: true
 
       - shell: bash -l {0}
         run: |
           conda install mkl=2018
-          conda install pytorch-geometric -c rusty1s -c conda-forge
+          conda install pytorch==1.8.1 cpuonly -c pytorch
+          conda install pyg -c pyg -c conda-forge
+          conda install -c conda-forge mdtraj
           conda info
-          conda list  
+          conda list
 
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v2
