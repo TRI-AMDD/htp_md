@@ -18,13 +18,22 @@ Facilitated by [htp_md_worker](https://github.com/tri-amdd/htp_md_worker), htp_m
 Dependencies are found in `requirements.txt`. 
 
 ### Installation
-1. Clone the repo and install.
+1. Clone the repo and install. We recommend having the latest version of conda.
+```git clone git@github.com:TRI-AMDD/htp_md.git
+cd htp_md
+conda update conda
+conda create -n htpmd python=3.6
 ```
-git clone git@github.com:TRI-AMDD/htp_md.git
+Activate the environment and install dependencies.
+
 ```
-2. Install dependencies.
-```
+conda activate htpmd
 pip install -e .
+```
+Pytorch and torch dependencies are installed using conda.
+```
+conda install pytorch==1.8.1 cpuonly -c pytorch
+conda install pyg -c pyg -c conda-forge
 ```
 
 ### Test Data 
