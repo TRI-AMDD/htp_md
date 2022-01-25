@@ -41,6 +41,7 @@ jobs:
 
       - name: Install dependencies
         shell: pwsh
+        working-directory: ./src
         run: |
           conda config --append channels conda-forge
           conda install --file=requirements.txt --file=requirements-test.txt
