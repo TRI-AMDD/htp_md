@@ -1,23 +1,25 @@
 FROM continuumio/miniconda3
 
-WORKDIR /home/htp_md
-COPY ./ ./
-
 #Activate Shell
 SHELL ["/bin/bash", "-c"]
 ENV PATH="/opt/conda/bin/:$PATH"
+
+RUN apt-get update
+RUN apt-get -y install gcc
+
 RUN conda update -n base -c defaults conda
-RUN conda env create -f env.yml
+RUN conda create -n htpmd python=3.6
 
-WORKDIR /home/htp_md
-ENV PATH="/opt/conda/envs/md_worker/bin:$PATH"
+WORKDIR /src
 
-COPY . /home/htp_md
+ENV PATH="/opt/conda/envs/htpmd/bin:$PATH"
+
+COPY /src .
 
 RUN source /opt/conda/bin/activate htpmd && \
-    pip install -e .[tests]
-
-WORKDIR /home/htp_md
-RUN python setup.py install
-
-CMD ["tail", "-f", "/dev/null"]
+    pip install --upgrade pip && \
+    pip install -e .[tests] && \
+    pip install -e . && \
+    conda install pytorch==1.8.1 cpuonly -c pytorch && \
+    conda install pyg -c pyg -c conda-forge && \
+    conda install -c conda-forge mdtraj
