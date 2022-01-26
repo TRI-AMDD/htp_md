@@ -10,8 +10,8 @@ pytest
 pytest-cov
 mordred==1.2.0
 scikit-learn==0.23.*
-docopt
-torch==1.10.1
-torch-scatter -f https://data.pyg.org/whl/torch-1.10.1+cu113.html
-torch-sparse -f https://data.pyg.org/whl/torch-1.10.1+cu113.html
-torch-geometric
+# docopt
+# torch==1.10.1
+# torch-scatter -f https://data.pyg.org/whl/torch-1.10.1+cu113.html
+# torch-sparse -f https://data.pyg.org/whl/torch-1.10.1+cu113.html
+# torch-geometric

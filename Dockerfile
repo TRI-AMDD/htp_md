@@ -6,6 +6,7 @@ ENV PATH="/opt/conda/bin/:$PATH"
 
 RUN apt-get update
 RUN apt-get -y install gcc
+# RUN apt-get -y install python3.6
 
 RUN conda update -n base -c defaults conda
 RUN conda create -n htpmd python=3.6
