@@ -18,9 +18,9 @@ ENV PATH="/opt/conda/envs/htpmd/bin:$PATH"
 COPY /src .
 
 RUN source /opt/conda/bin/activate htpmd && \
-    pip install --upgrade pip && \
-    pip install -e .[tests] && \
-    pip install -e . && \
     conda install pytorch==1.8.1 cpuonly -c pytorch && \
     conda install pyg -c pyg -c conda-forge && \
-    conda install -c conda-forge mdtraj
+    conda install -c conda-forge mdtraj && \
+    pip install --upgrade pip && \
+    pip install -e .[tests] && \
+    pip install -e .
