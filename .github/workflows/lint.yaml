@@ -30,9 +30,9 @@ jobs:
         run: |
           pip install pycodestyle --upgrade --quiet
           pycodestyle htpmd
-
+                  
       - name: flake8
-       working-directory: src
+        working-directory: src
         run: |
           flake8 --count --show-source --statistics htpmd
           # exit-zero treats all errors as warnings.
