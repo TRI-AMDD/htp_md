@@ -1,9 +1,12 @@
-name: docker build and test
+name: Docker build and test
 
 on:
+  pull_request:
+    branches:
+      - master
   push:
     branches:
-      - add_docker_file
+      - master
 
 jobs:
   deploy:
@@ -26,5 +29,3 @@ jobs:
       run: |
         docker build --no-cache -t $IMAGE_TAG .
         docker run $IMAGE_TAG pytest
-        
-
