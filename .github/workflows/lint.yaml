@@ -27,6 +27,7 @@ jobs:
           
       - name: pycodestyle
         run: |
+          pip install pycodestyle --upgrade --quiet
           pycodestyle htpmd
 
       - name: flake8
