@@ -1,0 +1,31 @@
+name: Docker build and test
+
+on:
+  pull_request:
+    branches:
+      - master
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+
+    steps: 
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Extract branch name
+      shell: bash
+      run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/} | tr '[:upper:]' '[:lower:]' | tr '[:punct:]' '_')"
+      id: extract_branch
+
+    - name: Build and test image
+      id: build-test-image
+      env: 
+        IMAGE_TAG: "${{ steps.extract_branch.outputs.branch }}"
+      run: |
+        docker build --no-cache -t $IMAGE_TAG .
+        docker run $IMAGE_TAG pytest
