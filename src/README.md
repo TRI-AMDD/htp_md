@@ -12,6 +12,7 @@ Facilitated by [htp_md_worker](https://github.com/tri-amdd/htp_md_worker), htp_m
 * Structure (CIF)
 * Lithium MSD
 * Anion MSD
+* Simulation length
 
 ## Getting Started
 ### Dependencies
