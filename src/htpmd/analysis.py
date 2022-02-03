@@ -55,11 +55,11 @@ def get_all_properties(dir_name):
     # Only predict properties for polymers
     if metadata['material_group'] == 'polymer':
         if metadata['mol_smiles'] is not None:
-        # Get GNN predicted properties
+            # Get GNN predicted properties
             for prop in ML_PROPERTIES:
                 gnn_pred = gnn.predict([metadata['mol_smiles']], prop)[0]
                 results[f'gnn_{prop}'] = gnn_pred
-        # Get RF predicted properties
+            # Get RF predicted properties
             for prop in ML_PROPERTIES:
                 if prop == 'molarity':
                     continue
