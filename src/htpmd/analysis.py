@@ -65,7 +65,6 @@ def get_all_properties(dir_name):
                     continue
                 rf_pred = random_forest.random_forests_prediction([metadata['mol_smiles']], prop)[0]
                 results[f'rf_{prop}'] = rf_pred
-
     return results
 
 
