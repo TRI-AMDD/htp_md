@@ -14,6 +14,12 @@ def process_smiles(smiles, form_ring, has_H):
     if form_ring:
         rxn = AllChem.ReactionFromSmarts('([Cu][*:1].[*:2][Au])>>[*:1]-[*:2]')
         results = rxn.RunReactants([mol])
+        if not (len(results) == 1 and len(results[0]) == 1):
+            # Double bond
+            rxn = AllChem.ReactionFromSmarts(
+                '([Cu]=[*:1].[*:2]=[Au])>>[*:1]=[*:2]')
+            results = rxn.RunReactants([mol])
+        assert len(results) == 1 and len(results[0]) == 1, smiles
         assert len(results) == 1 and len(results[0]) == 1, smiles
         mol = results[0][0]
     Chem.SanitizeMol(mol)
@@ -28,7 +34,7 @@ def random_forests_prediction(smiles, prop, form_ring=1, has_H=0):
     calc = Calculator(descriptors, ignore_3D=True)  # initialize descriptors calculator
     mols = []
     for smile in smiles:
-        smile = process_smiles(smile, form_ring, has_H)  # pre-process simile structures
+        smile = process_smiles(smile, form_ring, has_H)  # pre-process smile structures
         mols.append(smile)
     df = calc.pandas(mols)
     df = df.apply(pd.to_numeric, errors='coerce')  # force all molecules have same dimension of features
