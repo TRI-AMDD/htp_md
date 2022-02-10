@@ -72,7 +72,7 @@ def process_smiles(smiles, form_ring, has_H):
 
 
 class PolymerDataset(Dataset):
-    """Polymer conducitivty dataset.
+    """Polymer conductivity dataset.
 
     args:
         root_dir: str, directory that stores smiles csv
