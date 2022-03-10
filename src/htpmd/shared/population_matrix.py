@@ -283,9 +283,8 @@ def stack_population_matrix(stacked_population, current_population):
     return stacked_population
 
 
-def generate_population_matrix(trajectory_reference_path, type_id=90, type_id2=94,
-                    type_id3=95, type_id4=93, min_steps=0,
-                    max_steps=2500, step_size=1000):
+def generate_population_matrix(trajectory_reference_path, type_id=90, type_id2=94, type_id3=95, type_id4=93,
+                               min_steps=0, max_steps=2500, step_size=1000):
     """
     Description:
 
@@ -447,4 +446,3 @@ def generate_population_matrix(trajectory_reference_path, type_id=90, type_id2=9
         f_target.close()
 
         return
-
