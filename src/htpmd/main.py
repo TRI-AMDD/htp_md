@@ -39,7 +39,6 @@ def get_version():
     version = pkg_resources.require("htpmd")[0].version
     return version
 
-
 def main():
 
     arguments = docopt(__doc__)
@@ -48,12 +47,14 @@ def main():
     if action == 'analyze':
 
         if not arguments['--dir']:
+            raise SyntaxError("Directory Not Provided")
             results = dict()
         else:
             dir_path = arguments['<dir_path>']
             results = analyze(dir_path)
 
     else:
+        raise SyntaxError("Invalid Action")
         results = dict()
 
     results['htp_md_version'] = get_version()
@@ -62,3 +63,5 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+
