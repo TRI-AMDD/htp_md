@@ -39,8 +39,8 @@ def get_version():
     version = pkg_resources.require("htpmd")[0].version
     return version
 
-def main():
 
+def main():
 
     arguments = docopt(__doc__)
     action = arguments['<action>']
