@@ -41,6 +41,7 @@ def get_version():
 
 def main():
 
+
     arguments = docopt(__doc__)
     action = arguments['<action>']
 
@@ -63,5 +64,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-
