@@ -71,7 +71,7 @@ User contributions for new analysis functions and data are greatly appreciated.
 4. Push to the Branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
-When contributing a new function, please follow the [template](https://github.com/TRI-AMDD/htp_md/blob/master/htpmd/shared/template.py). Each Pull Request for a new function should contain the following:
+When contributing a new function, please follow the [template](https://github.com/TRI-AMDD/htp_md/blob/master/src/htpmd/shared/template.py). Each Pull Request for a new function should contain the following:
 * `function.py`, following template guidelines
 * `function_test.py`, following template guidelines
 * Test data and expected outcome
