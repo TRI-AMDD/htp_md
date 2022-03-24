@@ -62,7 +62,8 @@ def get_population_matrix(dir_name):
     file_ref_path = os.path.join(dir_name, 'population.txt')
     if os.path.exists(file_ref_path):
         pop_mat = np.loadtxt(file_ref_path)
+        stacked_pop_mat = []
     else:
-        generate_population_matrix(dir_name)
-        pop_mat = np.load(file_ref_path)
-    return pop_mat
+        stacked_pop_mat, pop_mat = generate_population_matrix(dir_name)
+
+    return stacked_pop_mat, pop_mat

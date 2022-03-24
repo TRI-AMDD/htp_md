@@ -422,11 +422,9 @@ def generate_population_matrix(trajectory_reference_path, type_id=90, type_id2=9
 
                     # form population matrix using clusters' info
                     current_population = population_matrix(step_data, all_clusters, type_id=90, type_id3=93)
-                    # print(current_population)
 
+                    # form stacked population matrix using population matrix at each time frame
                     stacked_population = stack_population_matrix(stacked_population, current_population)
-
-                    ###
 
                 else:
 
@@ -435,14 +433,7 @@ def generate_population_matrix(trajectory_reference_path, type_id=90, type_id2=9
             else:
                 l_num = l_num + 1
 
-        # save stacked population matrices for the trajectory
-        np.save(f'{trajectory_reference_path}/stacked_population', stacked_population)
-
         # save population matrix averaged from min_steps to max_steps
         avg_population = np.mean(stacked_population, axis=2)
 
-        # save averaged population matrices for the trajectory
-        np.savetxt(f'{trajectory_reference_path}/population.txt', avg_population)
-        f_target.close()
-
-        return
+        return stacked_population, avg_population

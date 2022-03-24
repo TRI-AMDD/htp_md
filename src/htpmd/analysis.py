@@ -24,7 +24,7 @@ ML_PROPERTIES = [
 def get_all_properties(dir_name):
     # Load trajectories and pre-computed properties
     traj = LammpsTrajectoryLoader().load(dir_name)
-    pop_mat = get_population_matrix(dir_name)
+    stacked_pop_mat, pop_mat = get_population_matrix(dir_name)
     metadata = get_metadata(dir_name)
 
     # Get parameters from metadata
@@ -36,6 +36,8 @@ def get_all_properties(dir_name):
     results.update(metadata)
     traj.remove_drift()
     results['li_diffusivity'] = compute_diffusivity(traj, target_type=cation_raw_type, **metadata)
+    results['pop_mat'] = pop_mat
+    results['stacked_pop_mat'] = stacked_pop_mat
     results['tfsi_diffusivity'] = compute_diffusivity(traj, target_type=anion_raw_type, **metadata)
     results['poly_diffusivity'] = compute_polymer_diffusivity(traj, **metadata)
     results['conductivity'], results['transference_number'] = compute_conductivity(
