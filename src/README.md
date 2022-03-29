@@ -15,29 +15,28 @@ Facilitated by [htp_md_worker](https://github.com/tri-amdd/htp_md_worker), htp_m
 
 ## Getting Started
 ### Dependencies
-Dependencies are found in `env.yml` and `requirements.txt`. 
+Dependencies are found in `requirements.txt`. 
 
 ### Installation
-1. Clone the repo and install. We recommend having the latest version of conda.
-```git clone git@github.com:TRI-AMDD/htp_md.git
-cd htp_md
-conda update conda
-conda env create -f env.yml
+1. Clone the repo and install.
+```
+git clone git@github.com:TRI-AMDD/htp_md.git
+```
+2. Build the docker container
+```
+docker build -t htpmd .
+```
+3. To test that the build is complete and runs properly, run pytests:
+```
+docker run htpmd python -m pytest
 ```
 
-Alternatively, one can create an environment separately and install the packages manually. 
-
+4. Start the container and the environment with the following command:
 ```
-conda create -n htpmd python=3.6
-conda install --name htpmd --file spec-file.txt
-```
-Once this environment is installed, activate and continue through set-up.
-
-```
+docker run -it htpmd
 conda activate htpmd
-pip install .
-
 ```
+Once in the container, use commands below to run analysis functions. 
 
 ### Test Data 
 We package some data which can be used for testing purposes. This data can be found in `./test_data/`, including several datasets: 
@@ -76,7 +75,7 @@ User contributions for new analysis functions and data are greatly appreciated.
 4. Push to the Branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
-When contributing a new function, please follow the [template](https://github.com/TRI-AMDD/htp_md/blob/master/htpmd/shared/template.py). Each Pull Request for a new function should contain the following:
+When contributing a new function, please follow the [template](https://github.com/TRI-AMDD/htp_md/blob/master/src/htpmd/shared/template.py). Each Pull Request for a new function should contain the following:
 * `function.py`, following template guidelines
 * `function_test.py`, following template guidelines
 * Test data and expected outcome

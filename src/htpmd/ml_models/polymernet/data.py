@@ -65,6 +65,11 @@ def process_smiles(smiles, form_ring, has_H):
     if form_ring:
         rxn = AllChem.ReactionFromSmarts('([Cu][*:1].[*:2][Au])>>[*:1]-[*:2]')
         results = rxn.RunReactants([mol])
+        if not (len(results) == 1 and len(results[0]) == 1):
+            # Double bond
+            rxn = AllChem.ReactionFromSmarts(
+                '([Cu]=[*:1].[*:2]=[Au])>>[*:1]=[*:2]')
+            results = rxn.RunReactants([mol])
         assert len(results) == 1 and len(results[0]) == 1, smiles
         mol = results[0][0]
     Chem.SanitizeMol(mol)
