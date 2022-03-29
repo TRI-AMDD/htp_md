@@ -39,7 +39,11 @@ conda activate htpmd
 Once in the container, use commands below to run analysis functions. 
 
 ### Test Data 
-Test data are found in `./test_data/`. 
+We package some data which can be used for testing purposes. This data can be found in `./test_data/`, including several datasets: 
+- `nacl_water`: a trajectory of a 1m aqueous NaCl electrolyte at 350 K. The system is composed of 222 water molecules and 20 ion pairs. The trajectory is 2 ns long, with 201 snapshots. The interatomic potential used is the SPC/E model for water, with standard Joung-Cheatham parameters for the ions. All parameters are reported in `10.1021/jp902584c`. 
+- `9-0-246295613-0`: a small fraction from a trajectory of polymer electrolytes with LiTFSI at 353 K. The trajectory is 14 ps long, with 7 snapsshots. The interatomic potential used is PCFF+, with the charge distribution of TFSI- adjusted. Details for the simualtion can be found in arXiv:2101.05339. 
+- `9-0-413610210-0`: a small fraction from a trajectory of polymer electrolytes with LiTFSI at 353 K. The trajectory is 14 ps long, with 8 snapsshots. The interatomic potential used is PCFF+, with the charge distribution of TFSI- adjusted f
+ollowing 10.1021/jp077026y. Details for the simualtion can be found in arXiv:2101.05339.
 
 ## Using the functions
 To get a dictionary of all results:
