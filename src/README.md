@@ -55,6 +55,7 @@ results = htpmd.analyze('test_data/9-0-246295613-0')
 This returns a dictionary of results. To see subfields of results
 `results.keys()`
 
+TODO: A tutorial that walks through installation of repo, download a test trajectory, use analyze_all to extract properties, use ML to make a prediction, and visualize. 
 
 ### Testing
 To run unit tests, run:
@@ -83,8 +84,8 @@ When contributing a new function, please follow the [template](https://github.co
 Contact the HTP team at Toyota Research Institute (materials-support@tri.global) with your name, affiliation, and a description of your data. 
 
 ## Version History
-* 0.2.4
-    * Bug fixes
+* 0.1.5
+    * First release to the public
 
 ## Authors
 Toyota Research Institute

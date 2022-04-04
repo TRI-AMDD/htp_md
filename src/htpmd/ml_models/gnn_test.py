@@ -9,6 +9,7 @@ from htpmd.ml_models import gnn
         'li_diffusivity',
         'poly_diffusivity',
         'tfsi_diffusivity',
+        'molarity',
         'transference_number',
     ])
 def test_gnn(prop):

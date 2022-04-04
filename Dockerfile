@@ -15,7 +15,6 @@ WORKDIR /src
 ENV PATH="/opt/conda/envs/htpmd/bin:$PATH"
 
 COPY /src .
-COPY README.md /
 
 RUN source /opt/conda/bin/activate htpmd && \
     conda install pytorch==1.8.1 cpuonly -c pytorch && \

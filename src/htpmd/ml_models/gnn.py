@@ -18,6 +18,7 @@ PROP_CONFIGS = {
     'li_diffusivity': {'mean': -7.81389, 'std': 0.205920, 'log10': True},
     'poly_diffusivity': {'mean': -7.841585, 'std': 0.256285, 'log10': True},
     'tfsi_diffusivity': {'mean': -7.60879, 'std': 0.217374, 'log10': True},
+    'molarity': {'mean': 1.411856, 'std': 0.0581892, 'log10': False},
     'transference_number': {'mean': 0.0623139, 'std': 0.281334, 'log10': False},
 }
 
