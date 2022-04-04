@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 from pip._internal.req import parse_requirements
 from pip._internal.network.session import PipSession
 
-this_dir = os.path.dirname(os.path.abspath(__file__))
+this_dir = os.path.dirname(os.path.abspath('setup.py'))
 pip_requirements = parse_requirements(
     os.path.join(this_dir, "requirements.txt"), PipSession())
 pip_requirements_test = parse_requirements(
