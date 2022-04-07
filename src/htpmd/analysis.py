@@ -62,7 +62,7 @@ def get_all_properties(dir_name):
             for prop in ML_PROPERTIES:
                 rf_pred = random_forest.random_forests_prediction([metadata['mol_smiles']], prop)[0]
                 if prop != 'transference_number':
-                    rf_pred = 10**rf_pred
+                    rf_pred = 10 ** rf_pred
                 results[f'rf_{prop}'] = rf_pred
     return results
 
