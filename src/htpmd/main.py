@@ -48,12 +48,14 @@ def main():
     if action == 'analyze':
 
         if not arguments['--dir']:
+            raise SyntaxError("Directory Not Provided")
             results = dict()
         else:
             dir_path = arguments['<dir_path>']
             results = analyze(dir_path)
 
     else:
+        raise SyntaxError("Invalid Action")
         results = dict()
 
     results['htp_md_version'] = get_version()
