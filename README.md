@@ -4,6 +4,7 @@ htp_md is the analysis module in a suite of tools ([htp_md_worker],[UI]) that st
 Facilitated by [htp_md_worker](https://github.com/tri-amdd/htp_md_worker), htp_md extracts the following properties from raw trajectory data:
 * Molality (input metadata)
 * SMILES (input metadata)
+* Simulation length (input metadata) 
 * Conductivity
 * Lithium diffusivity
 * Anion diffusivity
@@ -12,6 +13,7 @@ Facilitated by [htp_md_worker](https://github.com/tri-amdd/htp_md_worker), htp_m
 * Structure (CIF)
 * Lithium MSD
 * Anion MSD
+
 
 ## Getting Started
 ### Dependencies
