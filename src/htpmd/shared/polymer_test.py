@@ -45,7 +45,7 @@ def test_compute_polymer_diffusivity(dir_name, diff):
     ])
 def test_compute_conductivity(dir_name, cond, tn):
     trajectory = LammpsTrajectoryLoader().load(dir_name)
-    pop_mat = get_population_matrix(dir_name)
+    stacked_population, pop_mat = get_population_matrix(dir_name)
     cond_result, tn_result = compute_conductivity(
         trajectory, pop_mat=pop_mat, time_step=2., temperature=353.0, cation_raw_type=90, anion_raw_type=93)
     assert approx_equal(cond, cond_result)

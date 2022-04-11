@@ -9,7 +9,7 @@ import json
 import numpy as np
 
 from htpmd.trajectory.base import ExtendedLAMMPSTrajectoryFile
-
+from htpmd.shared.population_matrix import generate_population_matrix
 
 REQUIRED_METADATA = {
     'mol_smiles',  # Smiles for molecule. E.g. '[Cu]CCO[Au]' for PEO
@@ -59,5 +59,14 @@ def get_metadata(dir_name):
 
 def get_population_matrix(dir_name):
     """Load the population matrix computed by lammps."""
-    pop_mat = np.loadtxt(os.path.join(dir_name, 'population.txt'))
-    return pop_mat
+    file_ref_path = os.path.join(dir_name, 'population.txt')
+    if os.path.exists(file_ref_path):
+        pop_mat = np.loadtxt(file_ref_path)
+        stacked_pop_mat = np.empty((0, 1))
+    else:
+        stacked_pop_mat, pop_mat = generate_population_matrix(dir_name)
+        # save the population matrices in the local directory
+        np.savetxt(os.path.join(dir_name, 'population.txt'), pop_mat)
+        np.save(os.path.join(dir_name, 'stacked_pop'), stacked_pop_mat)
+
+    return stacked_pop_mat, pop_mat
