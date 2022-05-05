@@ -65,6 +65,46 @@ def compute_diffusivity(trajectory, **params):
     return diffusivity
 
 
+def compute_diffusivity_array(trajectory, **params):
+    """
+    Description:
+        Diffusivity of a specified atom type (unit: cm^2/s).
+
+        Example:
+        `li_diffusivity = compute_diffusivity(trajectory, **{'target_type': 90})`
+        or
+        `li_diffusivity = compute_diffusivity(trajectory, target_type=90)`
+
+    Version: 1.0.0
+
+    Author:
+        Name:                                           Tian Xie
+        Affiliation:                                    MIT
+        Email:                                          <optional>
+
+    Args:
+        trajectory (trajectory.base.Trajectory):        trajectory to compute metric on
+        **params:                                       Methodology specific parameters.
+                                                        Required fields:
+                                                            target_type (int)
+
+    Returns:
+        float:                                          diffusivity (for given target_type)
+
+    """
+    required_parameters = ('target_type', 'time_step')
+    check_params(required_parameters, params)
+    delta_t = params['time_step'] * PICOSECOND
+
+    _, msds = compute_non_avg_msd_curve(trajectory, **params)
+    idx_len = np.arange(1, len(msds) + 1, 1)
+    msd = msds / idx_len
+
+    diffusivity_array = msd / 6 / delta_t  # A^2/s
+    diffusivity_array = diffusivity_array * (ANGSTROM / CENTIMETER) ** 2  # cm^2/s
+    return diffusivity_array
+
+
 def compute_polymer_diffusivity(trajectory, **params):
     """
     Description:
@@ -177,6 +217,72 @@ def compute_conductivity(trajectory, **params):
 
     li_diff = compute_diffusivity(trajectory, target_type=params['cation_raw_type'], **params)  # cm^2/s
     tfsi_diff = compute_diffusivity(trajectory, target_type=params['anion_raw_type'], **params)  # cm^2/s
+
+    assert np.isclose(trajectory.lattices[0:1], trajectory.lattices).all()
+
+    V = np.prod(trajectory.lattices[0]) * (ANGSTROM / CENTIMETER)**3  # cm^3
+
+    cond = 0.
+    total_ion = 0.
+    tn_numerator, tn_denominator = 0., 0.
+
+    for i in range(max_cluster):
+        for j in range(max_cluster):
+            if i > j:
+                cond += FARADAY_CONSTANT**2 / V / BOLTZMANN_CONSTANT / T * \
+                    (i * z_i - j * z_j)**2 * pop_mat[i, j] * li_diff
+                tn_numerator += i * z_i * (i * z_i - j * z_j) * pop_mat[i, j] * li_diff
+                tn_denominator += (i * z_i - j * z_j)**2 * pop_mat[i, j] * li_diff
+            elif i < j:
+                cond += FARADAY_CONSTANT**2 / V / BOLTZMANN_CONSTANT / T * \
+                    (i * z_i - j * z_j)**2 * pop_mat[i, j] * tfsi_diff
+                tn_numerator += i * z_i * (i * z_i - j * z_j) * pop_mat[i, j] * tfsi_diff
+                tn_denominator += (i * z_i - j * z_j)**2 * pop_mat[i, j] * tfsi_diff
+            else:
+                pass
+            total_ion += (i + j) * pop_mat[i, j]
+    tn = tn_numerator / tn_denominator
+
+    return cond, tn
+
+
+def compute_conductivity_array(trajectory, **params):
+    """
+    Description:
+        Compute the conductivity and transference number using the
+        cluster-Nernst-Einstein described in the following paper.
+
+        France-Lanord and Grossman. "Correlations from ion pairing and the
+        Nernst-Einstein equation." Physical review letters 122.13 (2019): 136001.
+
+    Version: 1.0.0
+
+    Author:
+        Name:                                           Tian Xie
+        Affiliation:                                    MIT
+        Email:                                          <optional>
+
+    Args:
+        trajectory (trajectory.base.Trajectory):        trajectory to compute metric on
+        **params:                                       Methodology specific parameters.
+                                                        Required fields:
+                                                            pop_mat: np.array
+
+    Returns:
+        float:                                          conductivity (unit: S/cm)
+        float:                                          transference_number
+
+    """
+    required_parameters = ('pop_mat', 'time_step', 'temperature', 'cation_raw_type', 'anion_raw_type')
+    check_params(required_parameters, params)
+
+    max_cluster = 10
+    T = params['temperature']
+    pop_mat = params['pop_mat']
+    z_i, z_j = 1, 1  # charges carried by cation and anions
+
+    li_diff = compute_diffusivity_array(trajectory, target_type=params['cation_raw_type'], **params)  # cm^2/s
+    tfsi_diff = compute_diffusivity_array(trajectory, target_type=params['anion_raw_type'], **params)  # cm^2/s
 
     assert np.isclose(trajectory.lattices[0:1], trajectory.lattices).all()
 
