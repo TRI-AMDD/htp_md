@@ -77,7 +77,7 @@ def test_compute_conductivity_array(dir_name, cond, tn):
     cond_result, tn_result = compute_conductivity_array(
         trajectory, pop_mat=pop_mat, time_step=2., temperature=353.0, cation_raw_type=90, anion_raw_type=93)
     assert approx_equal(cond, cond_result[-1])
-    assert approx_equal(tn, tn_result)
+    assert approx_equal(tn, tn_result[-1])
 
 
 @pytest.mark.parametrize(
