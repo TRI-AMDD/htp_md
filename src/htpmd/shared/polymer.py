@@ -96,13 +96,15 @@ def compute_diffusivity_array(trajectory, **params):
     check_params(required_parameters, params)
     delta_t = params['time_step'] * PICOSECOND
 
-    _, msds = compute_non_avg_msd_curve(trajectory, **params)
-    idx_len = np.arange(1, len(msds) + 1, 1)
-    msd = msds / idx_len
+    target_idx = np.nonzero(trajectory.raw_types == params['target_type'])[0]
+    target_coords = trajectory.unwrapped_coords[:, target_idx]
 
-    diffusivity_array = msd / 6 / delta_t  # A^2/s
-    diffusivity_array = diffusivity_array * (ANGSTROM / CENTIMETER) ** 2  # cm^2/s
-    return diffusivity_array
+    msd = [np.mean(np.sum((target_coords[t] - target_coords[0]) ** 2, axis=-1)) for t in range(1, len(target_coords))]
+    idx_len = np.arange(1, len(msd) + 1, 1)
+
+    diffusivity = msd / idx_len / 6 / delta_t  # A^2/s
+    diffusivity = diffusivity * (ANGSTROM / CENTIMETER) ** 2  # cm^2/s
+    return diffusivity
 
 
 def compute_polymer_diffusivity(trajectory, **params):
@@ -141,6 +143,47 @@ def compute_polymer_diffusivity(trajectory, **params):
     msd = np.mean(np.sum((target_coords[-1] - target_coords[0])**2, axis=-1))
     diffusivity = msd / (len(target_coords) - 1) / 6 / delta_t  # A^2/s
     diffusivity = diffusivity * (ANGSTROM / CENTIMETER)**2  # cm^2/s
+    return diffusivity
+
+
+def compute_polymer_diffusivity_array(trajectory, **params):
+    """
+    Description:
+        Diffusivity of the polymer, defined by the average diffusivity of
+        N, O, S atoms in the polymer chain.
+
+    Version: 1.0.0
+
+    Author:
+        Name:                                           Tian Xie
+        Affiliation:                                    MIT
+        Email:                                          <optional>
+
+    Args:
+        trajectory (trajectory.base.Trajectory):        trajectory to compute metric on
+        **params:                                       Methodology specific parameters.
+                                                        Required fields:
+
+    Returns:
+        float:                                          diffusivity (for polymer)
+
+    """
+    required_parameters = ('time_step', 'polymer_raw_type_range', 'polymer_solvate_types')
+    check_params(required_parameters, params)
+    delta_t = params['time_step'] * PICOSECOND
+
+    solvate_types_list = [trajectory.atom_types == atom_type for atom_type in params['polymer_solvate_types']]
+    solvate_types = np.logical_or.reduce(solvate_types_list)
+    poly_types = np.logical_and(trajectory.raw_types >= params['polymer_raw_type_range'][0],
+                                trajectory.raw_types <= params['polymer_raw_type_range'][1])
+    poly_solvate_types = poly_types & solvate_types
+    poly_solvate_idx = np.nonzero(poly_solvate_types)[0]
+    target_coords = trajectory.unwrapped_coords[:, poly_solvate_idx]
+    msd = [np.mean(np.sum((target_coords[t] - target_coords[0]) ** 2, axis=-1)) for t in range(1, len(target_coords))]
+    idx_len = np.arange(1, len(msd) + 1, 1)
+
+    diffusivity = msd / idx_len / 6 / delta_t  # A^2/s
+    diffusivity = diffusivity * (ANGSTROM / CENTIMETER) ** 2  # cm^2/s
     return diffusivity
 
 

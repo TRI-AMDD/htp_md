@@ -6,7 +6,7 @@ import numpy as np
 from htpmd.shared.polymer import (
     compute_diffusivity, compute_polymer_diffusivity, compute_conductivity,
     compute_molality, compute_displacement, compute_simulation_length, compute_diffusivity_array,
-    compute_conductivity_array)
+    compute_conductivity_array, compute_polymer_diffusivity_array)
 from htpmd.trajectory.load import (LammpsTrajectoryLoader, get_population_matrix)
 
 
@@ -48,6 +48,18 @@ def test_compute_polymer_diffusivity(dir_name, diff):
     trajectory = LammpsTrajectoryLoader().load(dir_name)
     assert approx_equal(diff, compute_polymer_diffusivity(
         trajectory, time_step=2., polymer_raw_type_range=[0, 89], polymer_solvate_types=[7, 8, 16]))
+
+
+@pytest.mark.parametrize(
+    'dir_name,diff',
+    [
+        ('test_data/9-0-246295613-0', 1.4832525239039016e-06),
+        ('test_data/9-0-413610210-0', 9.208230905677645e-07),
+    ])
+def test_compute_polymer_diffusivity_array(dir_name, diff):
+    trajectory = LammpsTrajectoryLoader().load(dir_name)
+    assert approx_equal(diff, compute_polymer_diffusivity_array(
+        trajectory, time_step=2., polymer_raw_type_range=[0, 89], polymer_solvate_types=[7, 8, 16])[-1])
 
 
 @pytest.mark.parametrize(
