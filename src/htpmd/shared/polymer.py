@@ -149,8 +149,8 @@ def compute_polymer_diffusivity(trajectory, **params):
 def compute_polymer_diffusivity_array(trajectory, **params):
     """
     Description:
-        Array of diffusivity values for the polymer computed over the simulation time, defined by the average diffusivity of
-        N, O, S atoms in the polymer chain.
+        Array of diffusivity values for the polymer computed over the simulation time, defined by the
+        average diffusivity of N, O, S atoms in the polymer chain.
 
     Version: 1.0.0
 
