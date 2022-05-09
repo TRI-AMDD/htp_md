@@ -68,18 +68,18 @@ def compute_diffusivity(trajectory, **params):
 def compute_diffusivity_array(trajectory, **params):
     """
     Description:
-        Diffusivity of a specified atom type (unit: cm^2/s).
+        Array of diffusivity values for a specified atom type computed over the simulation time.
 
         Example:
-        `li_diffusivity = compute_diffusivity(trajectory, **{'target_type': 90})`
+        `li_diffusivity_array = compute_diffusivity(trajectory, **{'target_type': 90})`
         or
-        `li_diffusivity = compute_diffusivity(trajectory, target_type=90)`
+        `li_diffusivity_array = compute_diffusivity(trajectory, target_type=90)`
 
     Version: 1.0.0
 
     Author:
-        Name:                                           Tian Xie
-        Affiliation:                                    MIT
+        Name:                                           Arash Khajeh
+        Affiliation:                                    TRI
         Email:                                          <optional>
 
     Args:
@@ -89,7 +89,7 @@ def compute_diffusivity_array(trajectory, **params):
                                                             target_type (int)
 
     Returns:
-        float:                                          diffusivity (for given target_type)
+        np.array:                                          diffusivity array(array of floats with unit: cm^2/s)
 
     """
     required_parameters = ('target_type', 'time_step')
@@ -102,9 +102,9 @@ def compute_diffusivity_array(trajectory, **params):
     msd = [np.mean(np.sum((target_coords[t] - target_coords[0]) ** 2, axis=-1)) for t in range(1, len(target_coords))]
     idx_len = np.arange(1, len(msd) + 1, 1)
 
-    diffusivity = msd / idx_len / 6 / delta_t  # A^2/s
-    diffusivity = diffusivity * (ANGSTROM / CENTIMETER) ** 2  # cm^2/s
-    return diffusivity
+    diffusivity_array = msd / idx_len / 6 / delta_t  # A^2/s
+    diffusivity_array = diffusivity_array * (ANGSTROM / CENTIMETER) ** 2  # cm^2/s
+    return diffusivity_array
 
 
 def compute_polymer_diffusivity(trajectory, **params):
@@ -149,14 +149,14 @@ def compute_polymer_diffusivity(trajectory, **params):
 def compute_polymer_diffusivity_array(trajectory, **params):
     """
     Description:
-        Diffusivity of the polymer, defined by the average diffusivity of
+        Array of diffusivity values for the polymer computed over the simulation time, defined by the average diffusivity of
         N, O, S atoms in the polymer chain.
 
     Version: 1.0.0
 
     Author:
-        Name:                                           Tian Xie
-        Affiliation:                                    MIT
+        Name:                                           Arash Khajeh
+        Affiliation:                                    TRI
         Email:                                          <optional>
 
     Args:
@@ -165,7 +165,7 @@ def compute_polymer_diffusivity_array(trajectory, **params):
                                                         Required fields:
 
     Returns:
-        float:                                          diffusivity (for polymer)
+        np.array:                                          diffusivity array(array of floats with unit: cm^2/s)
 
     """
     required_parameters = ('time_step', 'polymer_raw_type_range', 'polymer_solvate_types')
@@ -182,9 +182,9 @@ def compute_polymer_diffusivity_array(trajectory, **params):
     msd = [np.mean(np.sum((target_coords[t] - target_coords[0]) ** 2, axis=-1)) for t in range(1, len(target_coords))]
     idx_len = np.arange(1, len(msd) + 1, 1)
 
-    diffusivity = msd / idx_len / 6 / delta_t  # A^2/s
-    diffusivity = diffusivity * (ANGSTROM / CENTIMETER) ** 2  # cm^2/s
-    return diffusivity
+    diffusivity_array = msd / idx_len / 6 / delta_t  # A^2/s
+    diffusivity_array = diffusivity_array * (ANGSTROM / CENTIMETER) ** 2  # cm^2/s
+    return diffusivity_array
 
 
 def compute_molality(trajectory, **params):
@@ -292,8 +292,8 @@ def compute_conductivity(trajectory, **params):
 def compute_conductivity_array(trajectory, **params):
     """
     Description:
-        Compute the conductivity and transference number using the
-        cluster-Nernst-Einstein described in the following paper.
+        Arrays of ion conductivity and transference number computed over the time of simulation
+        using the cluster-Nernst-Einstein described in the following paper
 
         France-Lanord and Grossman. "Correlations from ion pairing and the
         Nernst-Einstein equation." Physical review letters 122.13 (2019): 136001.
@@ -301,8 +301,8 @@ def compute_conductivity_array(trajectory, **params):
     Version: 1.0.0
 
     Author:
-        Name:                                           Tian Xie
-        Affiliation:                                    MIT
+        Name:                                           Arash Khajeh
+        Affiliation:                                    TRI
         Email:                                          <optional>
 
     Args:
@@ -312,8 +312,8 @@ def compute_conductivity_array(trajectory, **params):
                                                             pop_mat: np.array
 
     Returns:
-        float:                                          conductivity (unit: S/cm)
-        float:                                          transference_number
+        np.array:                                          conductivity array (array of floats with unit: S/cm)
+        np.array:                                          transference_number array
 
     """
     required_parameters = ('pop_mat', 'time_step', 'temperature', 'cation_raw_type', 'anion_raw_type')
