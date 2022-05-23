@@ -5,15 +5,11 @@ Facilitated by [htp_md_worker](https://github.com/tri-amdd/htp_md_worker), htp_m
 * Molality (input metadata)
 * SMILES (input metadata)
 * Simulation length (input metadata) 
-* Conductivity
-* Lithium diffusivity
-* Anion diffusivity
-* Polymer diffusivity
+* Li-ion Conductivity
+* Diffusion Coefficient (ions and polymer chains)
 * Transference Number
 * Structure (CIF)
-* Lithium MSD
-* Anion MSD
-
+* Mean Squared Displacement (MSD) time series of ions
 
 ## Getting Started
 ### Dependencies
