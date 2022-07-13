@@ -29,11 +29,18 @@ docker build -t htpmd .
 docker run htpmd python -m pytest
 ```
 
-4. Start the container and the environment with the following command:
+4. Start the container and the environment. If you would like to use provided test data, use the following command:
 ```
 docker run -it htpmd
 conda activate htpmd
 ```
+If you would instead like to use your own data, use the following command:
+```
+docker run -it -v full/path/to/your/own/data:/src/your_data htpmd
+conda activate htpmd
+```
+where `full/path/to/your/own/data` is on your local computer, and `your_data` is the destination folder within the container. 
+
 Once in the container, use commands below to run analysis functions. 
 
 ### Test Data 
@@ -61,6 +68,11 @@ To run unit tests, run:
 ## Using htp_md
 To run analysis functions, run:
 `python main.py <action> [-d <dir_path>]`
+
+To run analysis functions on your own volume attached to the container (following instructions above):
+```
+python main.py <action> [-d </src/your/data>]
+```
 
 ## How to contribute
 User contributions for new analysis functions and data are greatly appreciated. 
