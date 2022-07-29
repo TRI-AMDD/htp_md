@@ -95,10 +95,6 @@ Contact the HTP team at Toyota Research Institute (materials-support@tri.global)
 * `relaxed.lmp`, which contains the starting configuration for LAMMPS production run, in the LAMMPS data file format (https://docs.lammps.org/2001/data_format.html)
 * `in.lmp`, which contains input information for running LAMMPS, in the LAMMPS input script format (https://docs.lammps.org/Commands_input.html)
 
-## Version History
-* 0.2.4
-    * Bug fixes
-
 ## Authors
 Toyota Research Institute
 Massachusetts Institute of Technology (Tian, Sheng, Arthur, Emily)
