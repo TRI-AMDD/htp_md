@@ -1,7 +1,7 @@
 # htp_md
 htp_md is the analysis module in a suite of tools ([UI](htpmd.matr.io)) that streamlines the process of analyzing, storing, visualizing, and predicting properties based on raw trajectory data, in support of research by polymers program at Massachusetts Institute of Technology and the Toyota Research Institute.
 
-Facilitated by [htp_md_worker](https://github.com/tri-amdd/htp_md_worker), htp_md extracts the following properties from raw trajectory data:
+htp_md extracts the following properties from raw trajectory data:
 * Molality (input metadata)
 * SMILES (input metadata)
 * Simulation length (input metadata) 
