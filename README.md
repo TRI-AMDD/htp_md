@@ -97,7 +97,15 @@ Contact the HTP team at Toyota Research Institute (materials-support@tri.global)
 
 ## Authors
 Toyota Research Institute
-Massachusetts Institute of Technology (Tian, Sheng, Arthur, Emily)
+- Ha-Kung Kwon
+- Daniel Schweigert
+- Arash Khajeh
+
+Massachusetts Institute of Technology 
+- Tian Xie
+- Arthur France-Lanord
+- Emily Crabb
+- Sheng Gong
 
 ## How to Cite
 If you use htp_md, please cite the following: TODO
