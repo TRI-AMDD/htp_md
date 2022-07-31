@@ -2,18 +2,18 @@
 htp_md is the analysis module in a suite of tools ([UI](htpmd.matr.io)) that streamlines the process of analyzing, storing, visualizing, and predicting properties based on raw trajectory data, in support of research by polymers program at Massachusetts Institute of Technology and the Toyota Research Institute.
 
 htp_md extracts the following properties from raw trajectory data:
-* Molality (input metadata)
 * SMILES (input metadata)
-* Simulation length (input metadata) 
-* Li-ion Conductivity
+* Simulation length (input metadata)
+* Ionic Conductivity
 * Diffusion Coefficient (ions and polymer chains)
+* Molality
 * Transference Number
 * Structure (CIF)
 * Mean Squared Displacement (MSD) time series of ions
 
 ## Getting Started
 ### Dependencies
-Dependencies are found in `requirements.txt`. 
+Dependencies are found in `requirements.txt`.
 
 ### Installation
 1. Clone the repo and install.
@@ -39,16 +39,15 @@ If you would instead like to use your own data, use the following command:
 docker run -it -v full/path/to/your/own/data:/src/your_data htpmd
 conda activate htpmd
 ```
-where `full/path/to/your/own/data` is on your local computer, and `your_data` is the destination folder within the container. 
+where `full/path/to/your/own/data` is on your local computer, and `your_data` is the destination folder within the container.
 
-Once in the container, use commands below to run analysis functions. 
+Once in the container, use commands below to run analysis functions.
 
-### Test Data 
-We package some data which can be used for testing purposes. This data can be found in `./test_data/`, including several datasets: 
-- `nacl_water`: a trajectory of a 1m aqueous NaCl electrolyte at 350 K. The system is composed of 222 water molecules and 20 ion pairs. The trajectory is 2 ns long, with 201 snapshots. The interatomic potential used is the SPC/E model for water, with standard Joung-Cheatham parameters for the ions. All parameters are reported in `10.1021/jp902584c`. 
-- `9-0-246295613-0`: a small fraction from a trajectory of polymer electrolytes with LiTFSI at 353 K. The trajectory is 14 ps long, with 7 snapsshots. The interatomic potential used is PCFF+, with the charge distribution of TFSI- adjusted. Details for the simualtion can be found in arXiv:2101.05339. 
-- `9-0-413610210-0`: a small fraction from a trajectory of polymer electrolytes with LiTFSI at 353 K. The trajectory is 14 ps long, with 8 snapsshots. The interatomic potential used is PCFF+, with the charge distribution of TFSI- adjusted f
-ollowing 10.1021/jp077026y. Details for the simualtion can be found in arXiv:2101.05339.
+### Test Data
+We package some data which can be used for testing purposes. This data can be found in `./test_data/`, including several datasets:
+- `nacl_water`: a trajectory of a 1m aqueous NaCl electrolyte at 350 K. The system is composed of 222 water molecules and 20 ion pairs. The trajectory is 2 ns long, with 201 snapshots. The interatomic potential used is the SPC/E model for water, with standard Joung-Cheatham parameters for the ions. All parameters are reported in [`10.1021/jp902584c`](https://doi.org/10.1021/jp902584c).
+- `9-0-246295613-0`: a small fraction from a trajectory of polymer electrolytes with LiTFSI at 353 K. The trajectory is 14 ps long, with 7 snapsshots. The interatomic potential used is PCFF+, with the charge distribution of TFSI- adjusted. Details for the simualtion can be found in [`10.1038/s41467-022-30994-1`](https://doi.org/10.1038/s41467-022-30994-1).
+- `9-0-413610210-0`: a small fraction from a trajectory of polymer electrolytes with LiTFSI at 353 K. The trajectory is 14 ps long, with 8 snapsshots. The interatomic potential used is PCFF+, with the charge distribution of TFSI- adjusted. Details for the simualtion can be found in [`10.1038/s41467-022-30994-1`](https://doi.org/10.1038/s41467-022-30994-1).
 
 ## Using the functions
 To get a dictionary of all results:
@@ -63,7 +62,7 @@ This returns a dictionary of results. To see subfields of results
 
 ### Testing
 To run unit tests, run:
-`python -m pytest` 
+`python -m pytest`
 
 ## Using htp_md
 To run analysis functions, run:
@@ -75,7 +74,7 @@ python main.py <action> [-d </src/your/data>]
 ```
 
 ## How to contribute
-User contributions for new analysis functions and data are greatly appreciated. 
+User contributions for new analysis functions and data are greatly appreciated.
 
 ### Contributing a new analysis function
 1. Fork the Project
@@ -101,7 +100,7 @@ Toyota Research Institute
 - Daniel Schweigert
 - Arash Khajeh
 
-Massachusetts Institute of Technology 
+Massachusetts Institute of Technology
 - Tian Xie
 - Arthur France-Lanord
 - Emily Crabb
