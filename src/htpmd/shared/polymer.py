@@ -149,7 +149,7 @@ def compute_polymer_diffusivity(trajectory, **params):
 def compute_polymer_diffusivity_array(trajectory, **params):
     """
     Description:
-        Array of diffusivity values for the polymer computed over the simulation time, defined by the
+        Computes an array of diffusivity values for the polymer computed over the simulation time, defined by the
         average diffusivity of N, O, S atoms in the polymer chain.
 
     Version: 1.0.0
@@ -292,7 +292,7 @@ def compute_conductivity(trajectory, **params):
 def compute_conductivity_array(trajectory, **params):
     """
     Description:
-        Arrays of ion conductivity and transference number computed over the time of simulation
+        Compute an array of ion conductivity and transference number computed over the time of simulation
         using the cluster-Nernst-Einstein described in the following paper
 
         France-Lanord and Grossman. "Correlations from ion pairing and the
