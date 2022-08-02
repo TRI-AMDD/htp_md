@@ -580,3 +580,4 @@ def compute_simulation_length(trajectory, **params):
     total_t = (trajectory.unwrapped_coords.shape[0] - 1) * delta_t
 
     return total_t / NANOSECOND
+
