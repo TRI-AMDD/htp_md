@@ -65,6 +65,48 @@ def compute_diffusivity(trajectory, **params):
     return diffusivity
 
 
+def compute_diffusivity_array(trajectory, **params):
+    """
+    Description:
+        Array of diffusivity values for a specified atom type computed over the simulation time.
+
+        Example:
+        `li_diffusivity_array = compute_diffusivity(trajectory, **{'target_type': 90})`
+        or
+        `li_diffusivity_array = compute_diffusivity(trajectory, target_type=90)`
+
+    Version: 1.0.0
+
+    Author:
+        Name:                                           Arash Khajeh
+        Affiliation:                                    TRI
+        Email:                                          <optional>
+
+    Args:
+        trajectory (trajectory.base.Trajectory):        trajectory to compute metric on
+        **params:                                       Methodology specific parameters.
+                                                        Required fields:
+                                                            target_type (int)
+
+    Returns:
+        np.array:                                          diffusivity array(array of floats with unit: cm^2/s)
+
+    """
+    required_parameters = ('target_type', 'time_step')
+    check_params(required_parameters, params)
+    delta_t = params['time_step'] * PICOSECOND
+
+    target_idx = np.nonzero(trajectory.raw_types == params['target_type'])[0]
+    target_coords = trajectory.unwrapped_coords[:, target_idx]
+
+    msd = [np.mean(np.sum((target_coords[t] - target_coords[0]) ** 2, axis=-1)) for t in range(1, len(target_coords))]
+    idx_len = np.arange(1, len(msd) + 1, 1)
+
+    diffusivity_array = msd / idx_len / 6 / delta_t  # A^2/s
+    diffusivity_array = diffusivity_array * (ANGSTROM / CENTIMETER) ** 2  # cm^2/s
+    return diffusivity_array
+
+
 def compute_polymer_diffusivity(trajectory, **params):
     """
     Description:
@@ -102,6 +144,47 @@ def compute_polymer_diffusivity(trajectory, **params):
     diffusivity = msd / (len(target_coords) - 1) / 6 / delta_t  # A^2/s
     diffusivity = diffusivity * (ANGSTROM / CENTIMETER)**2  # cm^2/s
     return diffusivity
+
+
+def compute_polymer_diffusivity_array(trajectory, **params):
+    """
+    Description:
+        Computes an array of diffusivity values for the polymer computed over the simulation time, defined by the
+        average diffusivity of N, O, S atoms in the polymer chain.
+
+    Version: 1.0.0
+
+    Author:
+        Name:                                           Arash Khajeh
+        Affiliation:                                    TRI
+        Email:                                          <optional>
+
+    Args:
+        trajectory (trajectory.base.Trajectory):        trajectory to compute metric on
+        **params:                                       Methodology specific parameters.
+                                                        Required fields:
+
+    Returns:
+        np.array:                                          diffusivity array(array of floats with unit: cm^2/s)
+
+    """
+    required_parameters = ('time_step', 'polymer_raw_type_range', 'polymer_solvate_types')
+    check_params(required_parameters, params)
+    delta_t = params['time_step'] * PICOSECOND
+
+    solvate_types_list = [trajectory.atom_types == atom_type for atom_type in params['polymer_solvate_types']]
+    solvate_types = np.logical_or.reduce(solvate_types_list)
+    poly_types = np.logical_and(trajectory.raw_types >= params['polymer_raw_type_range'][0],
+                                trajectory.raw_types <= params['polymer_raw_type_range'][1])
+    poly_solvate_types = poly_types & solvate_types
+    poly_solvate_idx = np.nonzero(poly_solvate_types)[0]
+    target_coords = trajectory.unwrapped_coords[:, poly_solvate_idx]
+    msd = [np.mean(np.sum((target_coords[t] - target_coords[0]) ** 2, axis=-1)) for t in range(1, len(target_coords))]
+    idx_len = np.arange(1, len(msd) + 1, 1)
+
+    diffusivity_array = msd / idx_len / 6 / delta_t  # A^2/s
+    diffusivity_array = diffusivity_array * (ANGSTROM / CENTIMETER) ** 2  # cm^2/s
+    return diffusivity_array
 
 
 def compute_molality(trajectory, **params):
@@ -177,6 +260,72 @@ def compute_conductivity(trajectory, **params):
 
     li_diff = compute_diffusivity(trajectory, target_type=params['cation_raw_type'], **params)  # cm^2/s
     tfsi_diff = compute_diffusivity(trajectory, target_type=params['anion_raw_type'], **params)  # cm^2/s
+
+    assert np.isclose(trajectory.lattices[0:1], trajectory.lattices).all()
+
+    V = np.prod(trajectory.lattices[0]) * (ANGSTROM / CENTIMETER)**3  # cm^3
+
+    cond = 0.
+    total_ion = 0.
+    tn_numerator, tn_denominator = 0., 0.
+
+    for i in range(max_cluster):
+        for j in range(max_cluster):
+            if i > j:
+                cond += FARADAY_CONSTANT**2 / V / BOLTZMANN_CONSTANT / T * \
+                    (i * z_i - j * z_j)**2 * pop_mat[i, j] * li_diff
+                tn_numerator += i * z_i * (i * z_i - j * z_j) * pop_mat[i, j] * li_diff
+                tn_denominator += (i * z_i - j * z_j)**2 * pop_mat[i, j] * li_diff
+            elif i < j:
+                cond += FARADAY_CONSTANT**2 / V / BOLTZMANN_CONSTANT / T * \
+                    (i * z_i - j * z_j)**2 * pop_mat[i, j] * tfsi_diff
+                tn_numerator += i * z_i * (i * z_i - j * z_j) * pop_mat[i, j] * tfsi_diff
+                tn_denominator += (i * z_i - j * z_j)**2 * pop_mat[i, j] * tfsi_diff
+            else:
+                pass
+            total_ion += (i + j) * pop_mat[i, j]
+    tn = tn_numerator / tn_denominator
+
+    return cond, tn
+
+
+def compute_conductivity_array(trajectory, **params):
+    """
+    Description:
+        Compute an array of ion conductivity and transference number computed over the time of simulation
+        using the cluster-Nernst-Einstein described in the following paper
+
+        France-Lanord and Grossman. "Correlations from ion pairing and the
+        Nernst-Einstein equation." Physical review letters 122.13 (2019): 136001.
+
+    Version: 1.0.0
+
+    Author:
+        Name:                                           Arash Khajeh
+        Affiliation:                                    TRI
+        Email:                                          <optional>
+
+    Args:
+        trajectory (trajectory.base.Trajectory):        trajectory to compute metric on
+        **params:                                       Methodology specific parameters.
+                                                        Required fields:
+                                                            pop_mat: np.array
+
+    Returns:
+        np.array:                                          conductivity array (array of floats with unit: S/cm)
+        np.array:                                          transference_number array
+
+    """
+    required_parameters = ('pop_mat', 'time_step', 'temperature', 'cation_raw_type', 'anion_raw_type')
+    check_params(required_parameters, params)
+
+    max_cluster = 10
+    T = params['temperature']
+    pop_mat = params['pop_mat']
+    z_i, z_j = 1, 1  # charges carried by cation and anions
+
+    li_diff = compute_diffusivity_array(trajectory, target_type=params['cation_raw_type'], **params)  # cm^2/s
+    tfsi_diff = compute_diffusivity_array(trajectory, target_type=params['anion_raw_type'], **params)  # cm^2/s
 
     assert np.isclose(trajectory.lattices[0:1], trajectory.lattices).all()
 
@@ -431,3 +580,4 @@ def compute_simulation_length(trajectory, **params):
     total_t = (trajectory.unwrapped_coords.shape[0] - 1) * delta_t
 
     return total_t / NANOSECOND
+
