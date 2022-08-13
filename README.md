@@ -107,4 +107,12 @@ Massachusetts Institute of Technology
 - Sheng Gong
 
 ## How to Cite
-If you use htp_md, please cite the following: TODO
+If you use htp_md, please cite the following:
+```
+@article{xie2022cloud,
+  title={A cloud platform for automating and sharing analysis of raw simulation data from high throughput polymer molecular dynamics simulations},
+  author={Xie, Tian and Kwon, Ha-Kyung and Schweigert, Daniel and Gong, Sheng and France-Lanord, Arthur and Khajeh, Arash and Crabb, Emily and Puzon, Michael and Fajardo, Chris and Powelson, Will and others},
+  journal={arXiv preprint arXiv:2208.01692},
+  year={2022}
+}
+```
