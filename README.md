@@ -73,6 +73,20 @@ To run analysis functions on your own volume attached to the container (followin
 python main.py <action> [-d </src/your/data>]
 ```
 
+## External software used in HTPMD
+Computation of ion cluster population matrix here is preformed using the dump module from pizza.py toolkit:
+
+"""
+Pizza.py toolkit, www.cs.sandia.gov/~sjplimp/pizza.html
+Steve Plimpton, sjplimp@sandia.gov, Sandia National Laboratories
+
+Copyright (2005) Sandia Corporation.  Under the terms of Contract
+DE-AC04-94AL85000 with Sandia Corporation, the U.S. Government retains
+certain rights in this software.  This software is distributed under
+the GNU General Public License.
+"""
+
+Please note that some modifications were applied to the dump tool in Pizza toolkit to run in Python 3. 
 ## How to contribute
 User contributions for new analysis functions and data are greatly appreciated.
 

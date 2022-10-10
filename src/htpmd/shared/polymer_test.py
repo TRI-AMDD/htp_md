@@ -1,8 +1,4 @@
-import unittest
-import json
-import os
 import pytest
-import numpy as np
 from htpmd.shared.polymer import (
     compute_diffusivity, compute_polymer_diffusivity, compute_conductivity,
     compute_molality, compute_displacement, compute_simulation_length, compute_diffusivity_array,
@@ -11,14 +7,14 @@ from htpmd.trajectory.load import (LammpsTrajectoryLoader, get_population_matrix
 
 
 def approx_equal(val1, val2):
-    return pytest.approx(val1, rel=1e-3) == val2
+    return pytest.approx(val1, rel=1.0e-6) == val2
 
 
 @pytest.mark.parametrize(
     'dir_name,li_diff,tfsi_diff',
     [
-        ('test_data/9-0-246295613-0', 1.2874560352233332e-06, 2.5612469517951516e-06),
-        ('test_data/9-0-413610210-0', 1.035696582236192e-06, 2.3270058381337847e-06),
+        ('test_data/9-0-246295613-0', 1.2874560352233334e-06, 2.561246951795152e-06),
+        ('test_data/9-0-413610210-0', 1.0356965822361922e-06, 2.327005838133785e-06),
     ])
 def test_compute_diffusivity(dir_name, li_diff, tfsi_diff):
     trajectory = LammpsTrajectoryLoader().load(dir_name)
@@ -29,8 +25,8 @@ def test_compute_diffusivity(dir_name, li_diff, tfsi_diff):
 @pytest.mark.parametrize(
     'dir_name,li_diff,tfsi_diff',
     [
-        ('test_data/9-0-246295613-0', 1.2874560352233332e-06, 2.5612469517951516e-06),
-        ('test_data/9-0-413610210-0', 1.035696582236192e-06, 2.3270058381337847e-06),
+        ('test_data/9-0-246295613-0', 1.2874560352233334e-06, 2.561246951795152e-06),
+        ('test_data/9-0-413610210-0', 1.0356965822361922e-06, 2.327005838133785e-06),
     ])
 def test_compute_diffusivity_array(dir_name, li_diff, tfsi_diff):
     trajectory = LammpsTrajectoryLoader().load(dir_name)
@@ -65,8 +61,8 @@ def test_compute_polymer_diffusivity_array(dir_name, diff):
 @pytest.mark.parametrize(
     'dir_name,cond,tn',
     [
-        ('test_data/9-0-246295613-0', 0.004507580946462734, 0.18290430863167545),
-        ('test_data/9-0-413610210-0', 0.005354250978187845, -0.061131167509913646),
+        ('test_data/9-0-246295613-0', 0.004798255867131224, 0.12111878931985638),
+        ('test_data/9-0-413610210-0', 0.0055822299628502615, -0.13037903387492417),
     ])
 def test_compute_conductivity(dir_name, cond, tn):
     trajectory = LammpsTrajectoryLoader().load(dir_name)
@@ -80,8 +76,8 @@ def test_compute_conductivity(dir_name, cond, tn):
 @pytest.mark.parametrize(
     'dir_name,cond,tn',
     [
-        ('test_data/9-0-246295613-0', 0.004507580946462734, 0.18290430863167545),
-        ('test_data/9-0-413610210-0', 0.005354250978187845, -0.061131167509913646),
+        ('test_data/9-0-246295613-0', 0.004798255867131224, 0.12111878931985638),
+        ('test_data/9-0-413610210-0', 0.0055822299628502615, -0.13037903387492417),
     ])
 def test_compute_conductivity_array(dir_name, cond, tn):
     trajectory = LammpsTrajectoryLoader().load(dir_name)
@@ -98,7 +94,7 @@ def test_compute_conductivity_array(dir_name, cond, tn):
         ('test_data/9-0-246295613-0', 1.4631208109388065),
         ('test_data/9-0-413610210-0', 1.3711409170333055),
     ])
-def test_compute_conductivity_2(dir_name, mod):
+def test_compute_molality(dir_name, mod):
     trajectory = LammpsTrajectoryLoader().load(dir_name)
     assert approx_equal(mod, compute_molality(
         trajectory, polymer_raw_type_range=[0, 89], cation_raw_type=90))
