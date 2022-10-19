@@ -89,14 +89,14 @@ When contributing a new function, please follow the [template](https://github.co
 * Test data and expected outcome
 
 ### Contributing a new trajectory
-Contact the HTP team at Toyota Research Institute (materials-support@tri.global) with your name, affiliation, and a description of your data. Any contributed data should be reproducible and are required to include the following:
+Contact the HTP team at Toyota Research Institute (em-htp@tri.global) with your name, affiliation, and a description of your data. Any contributed data should be reproducible and are required to include the following:
 * `Metadata.json`, which contains the description of the system, such as SMILES string for monomer and polymer, force field used, material group (polymer), temperature, time step, and cation and anion information (name and atom type), as well as polymer information (range of atom types)
 * `relaxed.lmp`, which contains the starting configuration for LAMMPS production run, in the LAMMPS data file format (https://docs.lammps.org/2001/data_format.html)
 * `in.lmp`, which contains input information for running LAMMPS, in the LAMMPS input script format (https://docs.lammps.org/Commands_input.html)
 
 ## Authors
 Toyota Research Institute
-- Ha-Kung Kwon
+- Ha-Kyung Kwon
 - Daniel Schweigert
 - Arash Khajeh
 
