@@ -1,16 +1,82 @@
 """
-Implemented class for computing population matrix
+Implemented functions to compute ion clusters' population matrix either from Pizza package when aggregates.txt is
+available or from trajectory dump file otherwise.
 """
 import os
 import sys
 import os.path
 import numpy as np
 import itertools
+from htpmd.shared.pizza_dump import dump
 sys.path.append(".")
 sys.path.append("../")
-"""
 
-"""
+
+def compute_pop_matrix_from_pizza_dump(trajectory_reference_path, li_idx=90, o_idx=94):
+    """
+    Description: Receives the path to simulation folder and computes population matrix using dump pizza_dump module
+
+        This function assumes Li ("90") and N in TFSI ("93") if the meta.json file does not exist
+
+    Args: trajectory_reference_path: path to the trajectory file to be processed (Ex:
+    '0623/poly_9_nion_50_conc_1.5/9-0-485080326-0')
+
+    Returns:
+        pop_matrix: population matrix that includes the number of clusters with different shapes.
+        pop_matrix[i,j] is the number of clusters with i number cations and j number of anions
+    """
+
+    path_to_aggregate_file = os.path.join(trajectory_reference_path, 'aggregates.txt')
+
+    # Cutoff in the cluster population: don't output a cluster matrix larger than (cutoff,cutoff)
+    cutoff = 50
+
+    print('Loading file...')
+    f = dump(path_to_aggregate_file)
+    print('Done')
+
+    n_snap = f.nsnaps
+    tsteps = f.time()
+
+    # Determine max cluster size based on the number of ions
+    ids = f.vecs(tsteps[0], 'id')
+
+    f.tselect.none()
+
+    n_max = int(np.size(ids) / 2)
+    popmatrix = np.zeros((max(cutoff, n_max), max(cutoff, n_max)), dtype=float)
+
+    # Loop over all snapshots, create intermediate list with
+    # unique cluster ids, then cast list into the population matrix
+    for i in range(0, n_snap):
+        f.tselect.one(tsteps[i])
+        time = f.time()[0]
+
+        ccids = np.unique(f.vecs(time, 'c_cc2'))
+        atoms = np.asarray(f.vecs(time, 'type', 'c_cc2', 'mol'))
+
+        for j in range(0, np.size(ccids)):
+            catccids = atoms[1, np.where(atoms[0, :] == li_idx)]
+            aniccids = atoms[1, np.where(atoms[0, :] == o_idx)]
+
+            catmols = atoms[2, np.where(atoms[0, :] == li_idx)]
+            animols = atoms[2, np.where(atoms[0, :] == o_idx)]
+
+            ccmols = catmols[np.where(catccids == ccids[j])]
+            acmols = animols[np.where(aniccids == ccids[j])]
+
+            ncat = len(np.unique(ccmols))
+            nani = len(np.unique(acmols))
+
+            popmatrix[ncat, nani] += 1.0
+
+    # We now have the whole population matrix. Output as i j pop
+    popmatrix /= n_snap
+
+    # Apply cutoff
+    popmatrix = popmatrix[:cutoff, :cutoff]
+
+    return popmatrix
 
 
 def add_info(info1, info2):
