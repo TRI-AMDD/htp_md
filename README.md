@@ -74,7 +74,7 @@ python main.py <action> [-d </src/your/data>]
 ```
 
 ## External software used in HTPMD
-Computation of ion cluster population matrix here is preformed using the dump module from pizza.py toolkit:
+The dump module from the pizza.py toolkit ((https://github.com/lammps/pizza) has been added to the code and used to compute the ion cluster population matrix.
 
 """
 Pizza.py toolkit, www.cs.sandia.gov/~sjplimp/pizza.html
@@ -87,6 +87,7 @@ the GNU General Public License.
 """
 
 Please note that some modifications were applied to the dump tool in Pizza toolkit to run in Python 3. 
+
 ## How to contribute
 User contributions for new analysis functions and data are greatly appreciated.
 
