@@ -288,6 +288,49 @@ def compute_conductivity(trajectory, **params):
 
     return cond, tn
 
+def compute_ne_conductivity(trajectory, **params):
+    """
+    Description:
+        Compute the conductivity and transference number using the
+        Nernst-Einstein approximation. 
+    Version: 1.0.0
+    Author:
+        Name:                                           Arthur France-Lanord
+        Affiliation:                                    MIT
+        Email:                                          <optional>
+    Args:
+        trajectory (trajectory.base.Trajectory):        trajectory to compute metric on
+        **params:                                       Methodology specific parameters.
+                                                        Required fields:
+                                                            none
+    Returns:
+        float:                                          conductivity (unit: S/cm)
+        float:                                          transference_number
+    """
+    required_parameters = ('time_step', 'temperature', 'cation_raw_type', 'anion_raw_type')
+    check_params(required_parameters, params)
+
+    T = params['temperature']
+    z_i, z_j = 1, 1  # charges carried by cation and anions
+
+    n_i = len(np.nonzero(trajectory.raw_types == params['cation_raw_type'])[0]) # number of cations
+    n_j = len(np.nonzero(trajectory.raw_types == params['anion_raw_type'])[0]) # number of anions
+
+    li_diff = compute_diffusivity(trajectory, target_type=params['cation_raw_type'], **params)  # cm^2/s
+    tfsi_diff = compute_diffusivity(trajectory, target_type=params['anion_raw_type'], **params)  # cm^2/s
+
+    assert np.isclose(trajectory.lattices[0:1], trajectory.lattices).all()
+
+    V = np.prod(trajectory.lattices[0]) * (ANGSTROM / CENTIMETER)**3  # cm^3
+
+    cond = 0.
+
+    cond += FARADAY_CONSTANT**2 / V / BOLTZMANN_CONSTANT / T * n_i**2 * li_diff
+    cond += FARADAY_CONSTANT**2 / V / BOLTZMANN_CONSTANT / T * n_j**2 * tfsi_diff
+
+    tn = li_diff / (li_diff + tfsi_diff)
+
+    return cond, tn
 
 def compute_conductivity_array(trajectory, **params):
     """
