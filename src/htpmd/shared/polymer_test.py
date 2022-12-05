@@ -2,12 +2,12 @@ import pytest
 from htpmd.shared.polymer import (
     compute_diffusivity, compute_polymer_diffusivity, compute_conductivity,
     compute_molality, compute_displacement, compute_simulation_length, compute_diffusivity_array,
-    compute_conductivity_array, compute_polymer_diffusivity_array)
+    compute_conductivity_array, compute_polymer_diffusivity_array, compute_density)
 from htpmd.trajectory.load import (LammpsTrajectoryLoader, get_population_matrix)
 
 
 def approx_equal(val1, val2):
-    return pytest.approx(val1, rel=1.0e-6) == val2
+    return pytest.approx(val1, rel=1.0e-4) == val2
 
 
 @pytest.mark.parametrize(
@@ -124,3 +124,14 @@ def test_compute_simulation_length(dir_name, total_length):
     trajectory = LammpsTrajectoryLoader().load(dir_name)
     assert approx_equal(compute_simulation_length(trajectory, time_step=2.0), total_length)
     assert approx_equal(compute_simulation_length(trajectory, time_step=2.0), total_length)
+
+
+@pytest.mark.parametrize(
+    'dir_name,true_density',
+    [
+        ('test_data/9-0-246295613-0', 1.1921),
+        ('test_data/9-0-413610210-0', 1.3461),
+    ])
+def test_compute_simulation_length(dir_name, true_density):
+    trajectory = LammpsTrajectoryLoader().load(dir_name)
+    assert approx_equal(compute_density(trajectory), true_density)
