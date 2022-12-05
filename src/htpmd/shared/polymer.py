@@ -25,6 +25,8 @@ from htpmd.constants import ATOM_MASSES, \
     RawType, \
     AtomType
 from pymatgen.core.structure import Structure
+from htpmd.ml_models.polymernet.data import process_smiles
+from rdkit import Chem
 
 
 def compute_diffusivity(trajectory, **params):
@@ -614,3 +616,40 @@ def compute_simulation_length(trajectory, **params):
     total_t = (trajectory.unwrapped_coords.shape[0] - 1) * delta_t
 
     return total_t / NANOSECOND
+
+
+def compute_degree_polymerzation(trajectory, **params):
+    """
+    Description:
+        Compute the degree of polymerization
+
+        Example:
+        `degree_polymerzation = compute_degree_polymerzation(
+            trajectory, **{'mol_smiles': '', 'poly_smiles': ''})`
+
+    Version: 1.0.0
+
+    Author:
+        Name:                                           Tian Xie
+        Affiliation:                                    MIT
+        Email:                                          <optional>
+
+    Args:
+        trajectory (trajectory.base.Trajectory):        trajectory to compute metric on
+        **params:                                       Methodology specific parameters.
+                                                        Required fields:
+
+    Returns:
+        int:                                          degree of polymerization
+
+    """
+    required_parameters = ('mol_smiles', 'poly_smiles')
+    check_params(required_parameters, params)
+
+    mono_mol = process_smiles(params['mol_smiles'], form_ring=True, has_H=True)
+    poly_mol = Chem.MolFromSmiles(params['poly_smiles'])
+    poly_mol = Chem.AddHs(poly_mol)
+    Chem.SanitizeMol(poly_mol)
+    degree_of_polymerization = (
+        Chem.Descriptors.MolWt(poly_mol) / Chem.Descriptors.MolWt(mono_mol))
+    return int(degree_of_polymerization)
