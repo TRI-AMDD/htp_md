@@ -618,7 +618,7 @@ def compute_simulation_length(trajectory, **params):
     return total_t / NANOSECOND
 
 
-def compute_degree_polymerzation(trajectory, **params):
+def compute_degree_polymerization(trajectory, **params):
     """
     Description:
         Compute the degree of polymerization

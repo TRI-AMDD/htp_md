@@ -4,7 +4,7 @@ from htpmd.shared.polymer import (
     compute_diffusivity, compute_polymer_diffusivity, compute_conductivity,
     compute_molality, compute_displacement, compute_simulation_length, compute_diffusivity_array,
     compute_conductivity_array, compute_polymer_diffusivity_array, compute_density,
-    compute_degree_polymerzation)
+    compute_degree_polymerization)
 from htpmd.trajectory.load import (LammpsTrajectoryLoader, get_population_matrix, get_metadata)
 
 
@@ -147,4 +147,4 @@ def test_compute_simulation_length(dir_name, true_density):
 def test_compute_simulation_length(dir_name, true_degree_polymerization):
     metadata = get_metadata(dir_name)
     trajectory = LammpsTrajectoryLoader().load(dir_name)
-    assert compute_degree_polymerzation(trajectory, **metadata) == true_degree_polymerization
+    assert compute_degree_polymerization(trajectory, **metadata) == true_degree_polymerization
