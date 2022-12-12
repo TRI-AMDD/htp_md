@@ -644,7 +644,12 @@ def compute_degree_polymerization(trajectory, **params):
 
     """
     required_parameters = ('mol_smiles', 'poly_smiles')
-    check_params(required_parameters, params)
+    try:
+        check_params(required_parameters, params)
+    except ValueError:
+        # degree of polymerization is 1 if 'poly_smiles' do not exist
+        check_params(required_parameters[:1], params)
+        return 1
 
     mono_mol = process_smiles(params['mol_smiles'], form_ring=True, has_H=True)
     poly_mol = Chem.MolFromSmiles(params['poly_smiles'])
