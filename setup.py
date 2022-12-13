@@ -12,14 +12,14 @@ pip_requirements_test = parse_requirements(
 reqs = [pii.requirement for pii in pip_requirements]
 reqs_test = [pii.requirement for pii in pip_requirements_test]
 
-readme_path = os.path.join(os.path.dirname(this_dir), "README.md")
+readme_path = os.path.join(this_dir, "README.md")
 
 with open(readme_path, "r") as f:
     long_description = f.read()
 
 setup(
     name='htpmd',
-    version='0.2.4',
+    version='0.2.5',
     description='A library to analyze trajectory data from Molecular Dynamics Simulations',
     long_description=long_description,
     long_description_content_type='text/markdown',
