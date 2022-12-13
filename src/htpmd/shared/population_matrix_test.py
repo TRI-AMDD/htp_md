@@ -14,6 +14,6 @@ def approx_equal(val1, val2):
         ('test_data/9-0-246295613-0'),
     ])
 def test_compute_pop_matrix_from_pizza_dump(dir_name):
-    pop_matrix = compute_pop_matrix_from_pizza_dump(dir_name, type_id=90, type_id3=94)
+    pop_matrix = compute_pop_matrix_from_pizza_dump(dir_name, 90, 94)
     path_to_pop_matrix = os.path.join(dir_name, 'population.txt')
-    assert approx_equal(pop_matrix == np.loadtxt(path_to_pop_matrix))
+    assert approx_equal(pop_matrix, np.loadtxt(path_to_pop_matrix))
