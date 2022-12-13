@@ -2,6 +2,7 @@ numpy>=1.19.0
 docopt>=0.6.2
 mdtraj>=1.9.4
 scipy>=1.5.0
+torch==1.8.1
 pymatgen
 rdkit-pypi==2021.9.3
 jupyterlab
@@ -10,7 +11,6 @@ pytest
 pytest-cov
 mordred==1.2.0
 scikit-learn==0.23.*
-torch==1.8.1
 torch-geometric
 torch-sparse
 torch-scatter
