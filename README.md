@@ -20,28 +20,16 @@ Dependencies are found in `requirements.txt`.
 ```
 git clone git@github.com:TRI-AMDD/htp_md.git
 ```
-2. Build the docker container
+2. Install htpmd into an environment.
 ```
-docker build -t htpmd .
-```
-3. To test that the build is complete and runs properly, run pytests:
-```
-docker run htpmd python -m pytest
-```
-
-4. Start the container and the environment. If you would like to use provided test data, use the following command:
-```
-docker run -it htpmd
+conda create -n htpmd python=3.6
 conda activate htpmd
+pip install -e .
 ```
-If you would instead like to use your own data, use the following command:
+3. Run pytests to ensure that installation is successful:
 ```
-docker run -it -v full/path/to/your/own/data:/src/your_data htpmd
-conda activate htpmd
+python -m pytest
 ```
-where `full/path/to/your/own/data` is on your local computer, and `your_data` is the destination folder within the container.
-
-Once in the container, use commands below to run analysis functions.
 
 ### Test Data
 We package some data which can be used for testing purposes. This data can be found in `./test_data/`, including several datasets:

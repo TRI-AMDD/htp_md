@@ -10,3 +10,7 @@ pytest
 pytest-cov
 mordred==1.2.0
 scikit-learn==0.23.*
+torch==1.8.1
+torch-geometric
+torch-sparse
+torch-scatter
