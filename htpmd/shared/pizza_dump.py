@@ -76,7 +76,11 @@ d.sort(1000)			   sort atoms in timestep N
 t = d.time()  	     	       	   return vector of selected timestep values
 """
 
-import sys, subprocess, re, glob, types
+import sys
+import subprocess
+import re
+import glob
+import types
 from os import popen
 from math import *  # any function could be used by set()
 
@@ -118,7 +122,8 @@ class dump:
 
         words = list[0].split()
         self.flist = []
-        for word in words: self.flist += glob.glob(word)
+        for word in words: 
+            self.flist += glob.glob(word)
         if len(self.flist) == 0 and len(list) == 1:
             raise Exception("no dump file specified")
 

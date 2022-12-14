@@ -38,13 +38,14 @@ jobs:
         pip install wheel
         pip install torch==1.8.1
         pip install -r requirements.txt
-        pip install -e .
         pip install -e .[tests]
-    - name: pytest
-      run: |
-        pytest htpmd --color=yes --cov=htpmd --cov-config=.coveragec --cov-report html:coverage_reports
-    - name: Coveralls
-      run: |
-        coveralls --service=github
+
+    # - name: pytest
+    #   run: |
+    #     pytest htpmd --color=yes --cov=htpmd --cov-config=.coveragec --cov-report html:coverage_reports
+
+    # - name: Coveralls
+    #   run: |
+    #     coveralls --service=github
 
     

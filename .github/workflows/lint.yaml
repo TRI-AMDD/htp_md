@@ -1,12 +1,13 @@
 name: Linting
 
 on:
-  pull_request:
-    branches:
-      - main
+  # pull_request:
+  #   branches:
+      # - main
   push:
     branches:
-      - main
+      - paper_improv
+      # - main
 
 jobs:
   build:
@@ -32,7 +33,6 @@ jobs:
           pip install wheel
           pip install torch==1.8.1
           pip install -r requirements.txt
-          pip install -e .
           pip install -e .[tests]
           
       - name: pycodestyle

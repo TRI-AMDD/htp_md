@@ -138,6 +138,7 @@ def test_compute_simulation_length(dir_name, true_density):
     trajectory = LammpsTrajectoryLoader().load(dir_name)
     assert approx_equal(compute_density(trajectory), true_density)
 
+
 @pytest.mark.parametrize(
     'dir_name,true_degree_polymerization',
     [
