@@ -17,7 +17,7 @@ d = dump("dump.*",0)		  two args = store filenames, but don't read
 
   incomplete and duplicate snapshots are deleted
   atoms will be unscaled if stored in files as scaled
-  self-describing column names assigned 
+  self-describing column names assigned
 
 time = d.next()             	  read next snapshot from dump files
 
@@ -82,7 +82,8 @@ import re
 import glob
 import types
 from os import popen
-from math import *  # any function could be used by set()
+import math
+# from math import *  # any function could be used by set()
 
 try:
     import numpy as np
@@ -94,8 +95,10 @@ except:
     oldnumeric = True
 
 
-# try: from DEFAULTS import PIZZA_GUNZIP
-# except: PIZZA_GUNZIP = "gunzip"
+try: 
+    from DEFAULTS import PIZZA_GUNZIP
+except: 
+    PIZZA_GUNZIP = "gunzip"
 
 # Class definition
 

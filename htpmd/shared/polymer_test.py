@@ -134,7 +134,7 @@ def test_compute_simulation_length(dir_name, total_length):
         ('test_data/9-0-246295613-0', 1.1921),
         ('test_data/9-0-413610210-0', 1.3461),
     ])
-def test_compute_simulation_length(dir_name, true_density):
+def test_compute_density(dir_name, true_density):
     trajectory = LammpsTrajectoryLoader().load(dir_name)
     assert approx_equal(compute_density(trajectory), true_density)
 
@@ -145,7 +145,7 @@ def test_compute_simulation_length(dir_name, true_density):
         ('test_data/9-0-246295613-0', 14),
         ('test_data/9-0-413610210-0', 26),
     ])
-def test_compute_simulation_length(dir_name, true_degree_polymerization):
+def test_compute_degree_polymerization(dir_name, true_degree_polymerization):
     metadata = get_metadata(dir_name)
     trajectory = LammpsTrajectoryLoader().load(dir_name)
     assert compute_degree_polymerization(trajectory, **metadata) == true_degree_polymerization
