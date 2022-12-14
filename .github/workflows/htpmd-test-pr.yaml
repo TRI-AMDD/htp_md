@@ -13,8 +13,8 @@ jobs:
     strategy:
       max-parallel: 20
       matrix:
-        os: [ubuntu-20.04, macos-latest, windows-latest]
-        python-version: [3.7]
+        os: [ubuntu-20.04, macos-latest, windows-2019 ] #add windows-latest testing
+        python-version: [3.6]
 
     runs-on: ${{ matrix.os}}
 
