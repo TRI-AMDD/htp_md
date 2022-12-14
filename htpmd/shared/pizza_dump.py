@@ -95,9 +95,9 @@ except:
     oldnumeric = True
 
 
-try: 
+try:
     from DEFAULTS import PIZZA_GUNZIP
-except: 
+except:
     PIZZA_GUNZIP = "gunzip"
 
 # Class definition
@@ -126,7 +126,7 @@ class dump:
 
         words = list[0].split()
         self.flist = []
-        for word in words: 
+        for word in words:
             self.flist += glob.glob(word)
         if len(self.flist) == 0 and len(list) == 1:
             raise Exception("no dump file specified")
