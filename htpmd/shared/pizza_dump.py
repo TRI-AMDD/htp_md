@@ -17,7 +17,7 @@ d = dump("dump.*",0)		  two args = store filenames, but don't read
 
   incomplete and duplicate snapshots are deleted
   atoms will be unscaled if stored in files as scaled
-  self-describing column names assigned 
+  self-describing column names assigned
 
 time = d.next()             	  read next snapshot from dump files
 
@@ -76,9 +76,14 @@ d.sort(1000)			   sort atoms in timestep N
 t = d.time()  	     	       	   return vector of selected timestep values
 """
 
-import sys, subprocess, re, glob, types
+import sys
+import subprocess
+import re
+import glob
+import types
 from os import popen
-from math import *  # any function could be used by set()
+import math
+# from math import *  # any function could be used by set()
 
 try:
     import numpy as np
@@ -90,10 +95,13 @@ except:
     oldnumeric = True
 
 
-# try: from DEFAULTS import PIZZA_GUNZIP
-# except: PIZZA_GUNZIP = "gunzip"
+try:
+    from DEFAULTS import PIZZA_GUNZIP
+except:
+    PIZZA_GUNZIP = "gunzip"
 
 # Class definition
+
 
 class dump:
 
@@ -118,7 +126,8 @@ class dump:
 
         words = list[0].split()
         self.flist = []
-        for word in words: self.flist += glob.glob(word)
+        for word in words:
+            self.flist += glob.glob(word)
         if len(self.flist) == 0 and len(list) == 1:
             raise Exception("no dump file specified")
 
