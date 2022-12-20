@@ -1,13 +1,12 @@
 name: Linting
 
 on:
-  # pull_request:
-  #   branches:
-      # - main
+  pull_request:
+    branches:
+      - main
   push:
     branches:
-      - paper_improv
-      # - main
+      - main
 
 jobs:
   build:
