@@ -1,1 +1,1 @@
-{"temperature": 353.0, "time_step": 2.0, "li_diffusivity": 1.2874560352233332e-06, "tfsi_diffusivity": 2.5612469517951516e-06, "poly_diffusivity": 1.4832525239039016e-06, "conductivity": 0.004507580946462734, "molality": 1.4631208109388065}
+{"temperature": 353.0, "time_step": 2.0, "li_diffusivity": 1.2874560352233332e-06, "tfsi_diffusivity": 2.5612469517951516e-06, "poly_diffusivity": 1.4832525239039016e-06, "conductivity": 0.004507580946462734, "conductivity_ne": 0.01499455101, "transference_number_ne": 0.3345168592, "molality": 1.4631208109388065}
