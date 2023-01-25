@@ -541,7 +541,7 @@ def get_cif_at_frame(trajectory, **params):
         coords_are_cartesian=True,
         to_unit_cell=True
     )
-    return structure.to('cif')
+    return structure.to(filename=None, fmt='cif')
 
 
 def compute_displacement(trajectory, **params):

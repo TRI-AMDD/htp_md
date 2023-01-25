@@ -1,4 +1,3 @@
-from curses import meta
 import pytest
 from htpmd.shared.polymer import (
     compute_diffusivity, compute_polymer_diffusivity, compute_conductivity,
