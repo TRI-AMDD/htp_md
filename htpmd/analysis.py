@@ -54,10 +54,11 @@ def get_all_properties(dir_name):
     results['tfsi_max_disp'] = compute_displacement(traj, target_type=anion_raw_type, type='max')
     results['simulation_length'] = compute_simulation_length(traj, **metadata)
     results['density'] = compute_density(traj, **metadata)
-    results['degree_of_polymerization'] = compute_degree_polymerization(traj, **metadata)
+
 
     # Only predict properties for polymers
     if metadata['material_group'] == 'polymer':
+        results['degree_of_polymerization'] = compute_degree_polymerization(traj, **metadata)
         if metadata['mol_smiles'] is not None:
             # Get GNN predicted properties
             for prop in ML_PROPERTIES:
