@@ -55,7 +55,6 @@ def get_all_properties(dir_name):
     results['simulation_length'] = compute_simulation_length(traj, **metadata)
     results['density'] = compute_density(traj, **metadata)
 
-
     # Only predict properties for polymers
     if metadata['material_group'] == 'polymer':
         results['degree_of_polymerization'] = compute_degree_polymerization(traj, **metadata)
