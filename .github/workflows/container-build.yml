@@ -1,0 +1,64 @@
+# This workflow will build and push a new container image to Amazon ECR,
+# and then will deploy a new task definition to Amazon ECS, when a release is created
+#
+# To use this workflow, you will need to complete the following set-up steps:
+#
+# 1. Create an ECR repository to store your images.
+#    For example: `aws ecr create-repository --repository-name my-ecr-repo --region us-east-2`.
+#    Replace the value of `ECR_REPOSITORY` in the workflow below with your repository's name.
+#    Replace the value of `aws-region` in the workflow below with your repository's region.
+# 2. Create secrets containing AWS credentials with access to the correct ECR and S3
+# 3. Create a secret with the deploy key for htp_md
+
+name: Build and Push to ECR
+
+on:
+  push:
+    branches:
+      - create_docker
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Extract branch name
+        shell: bash
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/} | tr '[:upper:]' '[:lower:]' | tr '[:punct:]' '_')"
+        id: extract_branch
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build, test, tag, and push image to Amazon ECR
+        id: build-image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: htp-md
+          IMAGE_TAG: "${{ steps.extract_branch.outputs.branch }}"
+          IMAGE_TAG_LATEST: "${{ steps.extract_branch.outputs.branch }}-latest"
+        run: |
+          docker build --no-cache --build-arg SSH_PRIVATE_KEY="${{ secrets.HTP_MD_DEPLOY_KEY }}" -t $IMAGE_TAG \
+                       -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG-$GITHUB_RUN_NUMBER \
+                       -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG_LATEST \
+                       .
+          docker run --env AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} \
+                     --env AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} \
+                     --env AWS_DEFAULT_REGION=${{ secrets.AWS_REGION }} \
+                     $IMAGE_TAG \
+                     pytest
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG-$GITHUB_RUN_NUMBER
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG_LATEST
+          echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
