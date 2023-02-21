@@ -57,6 +57,15 @@ To use htpmd as an installed command line utility, run:
 htpmd <action> [-d <dir_path>]
 ```
 
+We noticed that using separate functions of htp-md does not necessarily yield the same numbers as calculated by htpmd.analyze(dir_name). To make sure the computed data (here, Li diffusivity) are correct the following command lines should be followed:
+```python
+from htpmd.trajectory.load import get_metadata
+traj = LammpsTrajectoryLoader().load(dir_name)
+traj.remove_drift()
+metadata = get_metadata(dir_name)
+results['li_diffusivity'] = compute_diffusivity(traj, target_type=90, **metadata)
+```
+
 ## External software used in HTPMD
 The dump module from the pizza.py toolkit ((https://github.com/lammps/pizza) has been added to the code and used to compute the ion cluster population matrix.
 
