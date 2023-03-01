@@ -21,9 +21,12 @@ from htpmd.constants import ATOM_MASSES, \
     NANOSECOND, \
     PICOSECOND, \
     KILOGRAM, \
+    ATOMIC_MASS_IN_G, \
     RawType, \
     AtomType
 from pymatgen.core.structure import Structure
+from htpmd.ml_models.polymernet.data import process_smiles
+from rdkit import Chem
 
 
 def compute_diffusivity(trajectory, **params):
@@ -221,6 +224,39 @@ def compute_molality(trajectory, **params):
     poly_mass = np.sum(atom_masses[trajectory.atom_types[poly_idx]])
 
     return float(len(li_idx)) / poly_mass * KILOGRAM
+
+
+def compute_density(trajectory, **params):
+    """
+    Description:
+        Density of the polymer electrolyte (unit: g / cm^3).
+
+    Version: 1.0.0
+
+    Author:
+        Name:                                           Tian Xie
+        Affiliation:                                    MIT
+        Email:                                          <optional>
+
+    Args:
+        trajectory (trajectory.base.Trajectory):        trajectory to compute metric on
+        **params:                                       Methodology specific parameters.
+                                                        Required fields:
+
+    Returns:
+        float:                                          density
+
+    """
+    required_parameters = tuple()
+    check_params(required_parameters, params)
+
+    atom_masses = np.array(ATOM_MASSES)
+
+    total_mass = np.sum(atom_masses[trajectory.atom_types])
+
+    total_volume = np.prod(trajectory.lattices[0])
+
+    return total_mass * ATOMIC_MASS_IN_G / (total_volume * ANGSTROM**3 / CENTIMETER**3)
 
 
 def compute_conductivity(trajectory, **params):
@@ -548,7 +584,7 @@ def get_cif_at_frame(trajectory, **params):
         coords_are_cartesian=True,
         to_unit_cell=True
     )
-    return structure.to('cif')
+    return structure.to(filename=None, fmt='cif')
 
 
 def compute_displacement(trajectory, **params):
@@ -624,3 +660,44 @@ def compute_simulation_length(trajectory, **params):
 
     return total_t / NANOSECOND
 
+
+def compute_degree_polymerization(trajectory, **params):
+    """
+    Description:
+        Compute the degree of polymerization
+
+        Example:
+        `degree_polymerzation = compute_degree_polymerzation(
+            trajectory, **{'mol_smiles': '', 'poly_smiles': ''})`
+
+    Version: 1.0.0
+
+    Author:
+        Name:                                           Tian Xie
+        Affiliation:                                    MIT
+        Email:                                          <optional>
+
+    Args:
+        trajectory (trajectory.base.Trajectory):        trajectory to compute metric on
+        **params:                                       Methodology specific parameters.
+                                                        Required fields:
+
+    Returns:
+        int:                                          degree of polymerization
+
+    """
+    required_parameters = ('mol_smiles', 'poly_smiles')
+    try:
+        check_params(required_parameters, params)
+    except ValueError:
+        # degree of polymerization is 1 if 'poly_smiles' do not exist
+        check_params(required_parameters[:1], params)
+        return 1
+
+    mono_mol = process_smiles(params['mol_smiles'], form_ring=True, has_H=True)
+    poly_mol = Chem.MolFromSmiles(params['poly_smiles'])
+    poly_mol = Chem.AddHs(poly_mol)
+    Chem.SanitizeMol(poly_mol)
+    degree_of_polymerization = (
+        Chem.Descriptors.MolWt(poly_mol) / Chem.Descriptors.MolWt(mono_mol))
+    return int(degree_of_polymerization)

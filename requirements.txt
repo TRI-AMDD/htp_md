@@ -1,0 +1,9 @@
+docopt>=0.6.2
+mdtraj>=1.9.7
+pymatgen>=2023.1.9
+torch==1.13.1
+torch-geometric>=2.2.0
+torch-scatter>=2.1.0 --find-links https://data.pyg.org/whl/torch-1.13.1.html
+torch-sparse>=0.6.16 --find-links https://data.pyg.org/whl/torch-1.13.1.html
+rdkit>=2022.9.3
+mordred>=1.2.0
