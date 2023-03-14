@@ -324,6 +324,7 @@ def compute_conductivity(trajectory, **params):
 
     return cond, tn
 
+
 def compute_ne_conductivity(trajectory, **params):
     """
     Description:
@@ -349,8 +350,8 @@ def compute_ne_conductivity(trajectory, **params):
     T = params['temperature']
     z_i, z_j = 1, -1  # charges carried by cation and anions
 
-    n_i = len(np.nonzero(trajectory.raw_types == params['cation_raw_type'])[0]) # number of cations
-    n_j = len(np.nonzero(trajectory.raw_types == params['anion_raw_type'])[0]) # number of anions
+    n_i = len(np.nonzero(trajectory.raw_types == params['cation_raw_type'])[0])  # number of cations
+    n_j = len(np.nonzero(trajectory.raw_types == params['anion_raw_type'])[0])  # number of anions
 
     li_diff = compute_diffusivity(trajectory, target_type=params['cation_raw_type'], **params)  # cm^2/s
     tfsi_diff = compute_diffusivity(trajectory, target_type=params['anion_raw_type'], **params)  # cm^2/s
@@ -367,6 +368,7 @@ def compute_ne_conductivity(trajectory, **params):
     tn = li_diff / (li_diff + tfsi_diff)
 
     return cond, tn
+
 
 def compute_conductivity_array(trajectory, **params):
     """
