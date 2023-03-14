@@ -42,6 +42,8 @@ def get_all_properties(dir_name):
     results['poly_diffusivity'] = compute_polymer_diffusivity(traj, **metadata)
     results['conductivity'], results['transference_number'] = compute_conductivity(
         traj, pop_mat=pop_mat, **metadata)
+    results['conductivity_ne'], results['transference_number_ne'] = compute_ne_conductivity(
+        traj, **metadata)
     results['molality'] = compute_molality(traj, **metadata)
     results['li_msd_curve'] = compute_msd_curve(traj, target_type=cation_raw_type, **metadata)
     results['tfsi_msd_curve'] = compute_msd_curve(traj, target_type=anion_raw_type, **metadata)
