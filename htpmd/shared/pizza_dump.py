@@ -277,7 +277,7 @@ class dump:
                 if oldnumeric:
                     atoms = np.zeros((snap.natoms, ncol), np.Float)
                 else:
-                    atoms = np.zeros((snap.natoms, ncol), np.float)
+                    atoms = np.zeros((snap.natoms, ncol), np.float32)
                 start = 0
                 stop = ncol
                 for i in range(snap.natoms):
