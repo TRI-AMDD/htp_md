@@ -1,4 +1,5 @@
 import pytest
+from os.path import dirname, join
 from htpmd.shared.polymer import (
     compute_diffusivity, compute_polymer_diffusivity, compute_conductivity,
     compute_molality, compute_displacement, compute_simulation_length, compute_diffusivity_array,
@@ -6,16 +7,18 @@ from htpmd.shared.polymer import (
     compute_degree_polymerization)
 from htpmd.trajectory.load import (LammpsTrajectoryLoader, get_population_matrix, get_metadata)
 
+TEST_DATA_FOLDER = join(dirname(__file__), '..', 'test_data')
+
 
 def approx_equal(val1, val2):
     return pytest.approx(val1, rel=1.0e-4) == val2
 
 
 @pytest.mark.parametrize(
-    'dir_name,li_diff,tfsi_diff',
+    'dir_name, li_diff, tfsi_diff',
     [
-        ('test_data/9-0-246295613-0', 1.2874560352233334e-06, 2.561246951795152e-06),
-        ('test_data/9-0-413610210-0', 1.0356965822361922e-06, 2.327005838133785e-06),
+        (join(TEST_DATA_FOLDER, '9-0-246295613-0'), 1.2874560352233334e-06, 2.561246951795152e-06),
+        (join(TEST_DATA_FOLDER, '9-0-413610210-0'), 1.0356965822361922e-06, 2.327005838133785e-06),
     ])
 def test_compute_diffusivity(dir_name, li_diff, tfsi_diff):
     trajectory = LammpsTrajectoryLoader().load(dir_name)
@@ -24,10 +27,10 @@ def test_compute_diffusivity(dir_name, li_diff, tfsi_diff):
 
 
 @pytest.mark.parametrize(
-    'dir_name,li_diff,tfsi_diff',
+    'dir_name, li_diff, tfsi_diff',
     [
-        ('test_data/9-0-246295613-0', 1.2874560352233334e-06, 2.561246951795152e-06),
-        ('test_data/9-0-413610210-0', 1.0356965822361922e-06, 2.327005838133785e-06),
+        (join(TEST_DATA_FOLDER, '9-0-246295613-0'), 1.2874560352233334e-06, 2.561246951795152e-06),
+        (join(TEST_DATA_FOLDER, '9-0-413610210-0'), 1.0356965822361922e-06, 2.327005838133785e-06),
     ])
 def test_compute_diffusivity_array(dir_name, li_diff, tfsi_diff):
     trajectory = LammpsTrajectoryLoader().load(dir_name)
@@ -38,8 +41,8 @@ def test_compute_diffusivity_array(dir_name, li_diff, tfsi_diff):
 @pytest.mark.parametrize(
     'dir_name,diff',
     [
-        ('test_data/9-0-246295613-0', 1.4832525239039016e-06),
-        ('test_data/9-0-413610210-0', 9.208230905677645e-07),
+        (join(TEST_DATA_FOLDER, '9-0-246295613-0'), 1.4832525239039016e-06),
+        (join(TEST_DATA_FOLDER, '9-0-413610210-0'), 9.208230905677645e-07),
     ])
 def test_compute_polymer_diffusivity(dir_name, diff):
     trajectory = LammpsTrajectoryLoader().load(dir_name)
@@ -50,8 +53,8 @@ def test_compute_polymer_diffusivity(dir_name, diff):
 @pytest.mark.parametrize(
     'dir_name,diff',
     [
-        ('test_data/9-0-246295613-0', 1.4832525239039016e-06),
-        ('test_data/9-0-413610210-0', 9.208230905677645e-07),
+        (join(TEST_DATA_FOLDER, '9-0-246295613-0'), 1.4832525239039016e-06),
+        (join(TEST_DATA_FOLDER, '9-0-413610210-0'), 9.208230905677645e-07),
     ])
 def test_compute_polymer_diffusivity_array(dir_name, diff):
     trajectory = LammpsTrajectoryLoader().load(dir_name)
@@ -62,8 +65,8 @@ def test_compute_polymer_diffusivity_array(dir_name, diff):
 @pytest.mark.parametrize(
     'dir_name,cond,tn',
     [
-        ('test_data/9-0-246295613-0', 0.004798255867131224, 0.12111878931985638),
-        ('test_data/9-0-413610210-0', 0.0055822299628502615, -0.13037903387492417),
+        (join(TEST_DATA_FOLDER, '9-0-246295613-0'), 0.004798255867131224, 0.12111878931985638),
+        (join(TEST_DATA_FOLDER, '9-0-413610210-0'), 0.0055822299628502615, -0.13037903387492417),
     ])
 def test_compute_conductivity(dir_name, cond, tn):
     trajectory = LammpsTrajectoryLoader().load(dir_name)
@@ -77,8 +80,8 @@ def test_compute_conductivity(dir_name, cond, tn):
 @pytest.mark.parametrize(
     'dir_name,cond,tn',
     [
-        ('test_data/9-0-246295613-0', 0.004798255867131224, 0.12111878931985638),
-        ('test_data/9-0-413610210-0', 0.0055822299628502615, -0.13037903387492417),
+        (join(TEST_DATA_FOLDER, '9-0-246295613-0'), 0.004798255867131224, 0.12111878931985638),
+        (join(TEST_DATA_FOLDER, '9-0-413610210-0'), 0.0055822299628502615, -0.13037903387492417),
     ])
 def test_compute_conductivity_array(dir_name, cond, tn):
     trajectory = LammpsTrajectoryLoader().load(dir_name)
@@ -92,8 +95,8 @@ def test_compute_conductivity_array(dir_name, cond, tn):
 @pytest.mark.parametrize(
     'dir_name,mod',
     [
-        ('test_data/9-0-246295613-0', 1.4631208109388065),
-        ('test_data/9-0-413610210-0', 1.3711409170333055),
+        (join(TEST_DATA_FOLDER, '9-0-246295613-0'), 1.4631208109388065),
+        (join(TEST_DATA_FOLDER, '9-0-413610210-0'), 1.3711409170333055),
     ])
 def test_compute_molality(dir_name, mod):
     trajectory = LammpsTrajectoryLoader().load(dir_name)
@@ -104,10 +107,10 @@ def test_compute_molality(dir_name, mod):
 @pytest.mark.parametrize(
     'dir_name,type',
     [
-        ('test_data/9-0-246295613-0', 'mean'),
-        ('test_data/9-0-413610210-0', 'mean'),
-        ('test_data/9-0-246295613-0', 'max'),
-        ('test_data/9-0-413610210-0', 'max'),
+        (join(TEST_DATA_FOLDER, '9-0-246295613-0'), 'mean'),
+        (join(TEST_DATA_FOLDER, '9-0-413610210-0'), 'mean'),
+        (join(TEST_DATA_FOLDER, '9-0-246295613-0'), 'max'),
+        (join(TEST_DATA_FOLDER, '9-0-413610210-0'), 'max'),
     ])
 def test_compute_displacement(dir_name, type):
     trajectory = LammpsTrajectoryLoader().load(dir_name)
@@ -118,8 +121,8 @@ def test_compute_displacement(dir_name, type):
 @pytest.mark.parametrize(
     'dir_name,total_length',
     [
-        ('test_data/9-0-246295613-0', 0.012),
-        ('test_data/9-0-413610210-0', 0.014),
+        (join(TEST_DATA_FOLDER, '9-0-246295613-0'), 0.012),
+        (join(TEST_DATA_FOLDER, '9-0-413610210-0'), 0.014),
     ])
 def test_compute_simulation_length(dir_name, total_length):
     trajectory = LammpsTrajectoryLoader().load(dir_name)
@@ -130,8 +133,8 @@ def test_compute_simulation_length(dir_name, total_length):
 @pytest.mark.parametrize(
     'dir_name,true_density',
     [
-        ('test_data/9-0-246295613-0', 1.1921),
-        ('test_data/9-0-413610210-0', 1.3461),
+        (join(TEST_DATA_FOLDER, '9-0-246295613-0'), 1.1921),
+        (join(TEST_DATA_FOLDER, '9-0-413610210-0'), 1.3461),
     ])
 def test_compute_density(dir_name, true_density):
     trajectory = LammpsTrajectoryLoader().load(dir_name)
@@ -141,8 +144,8 @@ def test_compute_density(dir_name, true_density):
 @pytest.mark.parametrize(
     'dir_name,true_degree_polymerization',
     [
-        ('test_data/9-0-246295613-0', 14),
-        ('test_data/9-0-413610210-0', 26),
+        (join(TEST_DATA_FOLDER, '9-0-246295613-0'), 14),
+        (join(TEST_DATA_FOLDER, '9-0-413610210-0'), 26),
     ])
 def test_compute_degree_polymerization(dir_name, true_degree_polymerization):
     metadata = get_metadata(dir_name)
