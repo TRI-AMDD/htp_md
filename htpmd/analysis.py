@@ -8,7 +8,7 @@ from htpmd.shared.polymer import (
     compute_diffusivity, compute_polymer_diffusivity, compute_molality,
     compute_conductivity, compute_msd_curve, compute_non_avg_msd_curve, get_cif_at_frame,
     compute_displacement, compute_simulation_length, compute_density,
-    compute_degree_polymerization)
+    compute_degree_polymerization, compute_ne_conductivity)
 from htpmd.ml_models import gnn, random_forest
 
 
