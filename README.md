@@ -84,7 +84,7 @@ User contributions for new analysis functions and data are greatly appreciated.
 
 When contributing a new function, please follow the [template](https://github.com/TRI-AMDD/htp_md/blob/master/src/htpmd/shared/template.py). Each Pull Request for a new function should contain the following:
 * `function.py`, following template guidelines
-* `function_test.py`, following template guidelines
+* `test_function.py`, following template guidelines
 * Test data and expected outcome
 
 ### Contributing a new trajectory
