@@ -11,7 +11,7 @@ from htpmd.ml_models import random_forest
         'tfsi_diffusivity',
         'transference_number',
     ])
-def test_gnn(prop):
+def test_rf(prop):
     preds = random_forest.random_forests_prediction(
         ['CC(CCNCC(C)OC(=O)[Au])CCO[Cu]'], prop)
     assert preds is not None
