@@ -8,7 +8,7 @@ from htpmd.shared.polymer import (
     compute_diffusivity, compute_polymer_diffusivity, compute_molality,
     compute_conductivity, compute_msd_curve, compute_non_avg_msd_curve, get_cif_at_frame,
     compute_displacement, compute_simulation_length, compute_density,
-    compute_degree_polymerization)
+    compute_degree_polymerization, compute_ne_conductivity)
 from htpmd.ml_models import gnn, random_forest
 
 
@@ -42,6 +42,8 @@ def get_all_properties(dir_name):
     results['poly_diffusivity'] = compute_polymer_diffusivity(traj, **metadata)
     results['conductivity'], results['transference_number'] = compute_conductivity(
         traj, pop_mat=pop_mat, **metadata)
+    results['conductivity_ne'], results['transference_number_ne'] = compute_ne_conductivity(
+        traj, **metadata)
     results['molality'] = compute_molality(traj, **metadata)
     results['li_msd_curve'] = compute_msd_curve(traj, target_type=cation_raw_type, **metadata)
     results['tfsi_msd_curve'] = compute_msd_curve(traj, target_type=anion_raw_type, **metadata)
