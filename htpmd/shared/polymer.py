@@ -329,7 +329,7 @@ def compute_ne_conductivity(trajectory, **params):
     """
     Description:
         Compute the conductivity and transference number using the
-        Nernst-Einstein approximation. 
+        Nernst-Einstein approximation.
     Version: 1.0.0
     Author:
         Name:                                           Arthur France-Lanord
